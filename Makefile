@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/03 16:14:01 by axgimene         ###   ########.fr        #
+#    Updated: 2025/11/05 13:51:50 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SRC = src/main.c \
 	src/parser_tokenizer_utils1.c \
 	src/parser_builtins2.c \
 	src/parser_parser_args2.c \
-	src/parser_redirections3.c \
+	src/parser_redirectionsPollitos3.c \
+	src/parser_redirectionsPollo.c \
 	src/parser_parser_main4.c \
 	src/parser_parser_init5.c \
 	src/parser_expander6.c \

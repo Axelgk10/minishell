@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_redirections3.c                             :+:      :+:    :+:   */
+/*   parser_redirectionsPollitos3.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:00:23 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/03 16:34:06 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/05 13:57:03 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 
-static int	handle_heredoc(char *delimiter)
+int	handle_heredoc(char *delimiter)
 {
 	int		fd;
 	char	*line;
@@ -40,7 +40,7 @@ static int	handle_heredoc(char *delimiter)
 	return (fd);
 }
 
-static int	handle_input_redirection(char *filename)
+int	handle_input_redirection(char *filename)
 {
 	int	fd;
 	
@@ -53,7 +53,7 @@ static int	handle_input_redirection(char *filename)
 	return (fd);
 }
 
-static int	handle_output_redirection(char *filename)
+int	handle_output_redirection(char *filename)
 {
 	int	fd;
 
@@ -66,7 +66,7 @@ static int	handle_output_redirection(char *filename)
 	return (fd);
 }
 
-static int	handle_append_redirection(char *filename)
+int	handle_append_redirection(char *filename)
 {
 	int	fd;
 
@@ -77,44 +77,4 @@ static int	handle_append_redirection(char *filename)
 		return (-1);
 	}
 	return (fd);
-}
-
-int	handle_redirection(t_token **tokens, t_cmd *cmd)
-{
-	t_token_type	type;
-	char			*filename;
-
-	if (!tokens || !*tokens || !cmd)
-		return (0);
-	type = (*tokens)->type;
-	*tokens = (*tokens)->next;
-	if (!*tokens || (*tokens)->type != T_WORD)
-		return (0);
-	filename = (*tokens)->value;
-	if (type == T_REDIR_IN)
-	{
-		if (cmd->in_fd >= 0)
-			close(cmd->in_fd);
-		cmd->in_fd = handle_input_redirection(filename);
-	}
-	else if (type == T_REDIR_OUT)
-	{
-		if (cmd->out_fd >= 0)
-			close(cmd->out_fd);
-		cmd->out_fd = handle_output_redirection(filename);
-	}
-	else if (type == T_APPEND)
-	{
-		if (cmd->out_fd >= 0)
-			close(cmd->out_fd);
-		cmd->out_fd = handle_append_redirection(filename);
-	}
-	else if (type == T_HEREDOC)
-	{
-		if (cmd->in_fd >= 0)
-			close(cmd->in_fd);
-		cmd->in_fd = handle_heredoc(filename);
-	}
-	*tokens = (*tokens)->next;
-	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/03 12:40:14 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/05 13:56:17 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,10 @@ void	handle_pipe_in_parse(t_token **token, t_cmd **cmd);
 void	handle_redir_in_parse(t_token **token, t_cmd **cmd);
 char	*expand_dollar(t_shell *shell, char *str, int *i);
 int		is_dollar_terminator(char c);
+int		handle_append_redirection(char *filename);
+int		handle_output_redirection(char *filename);
+int		handle_input_redirection(char *filename);
+int		handle_heredoc(char *delimiter);
 
 
 // Execution functions
