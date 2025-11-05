@@ -1,0 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_builtins2.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/03 13:45:14 by axgimene          #+#    #+#             */
+/*   Updated: 2025/11/03 13:45:55 by axgimene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
+
+static void	init_builtins_array(char **builtins)
+{
+	builtins[0] = "echo";
+	builtins[1] = "cd";
+	builtins[2] = "pwd";
+	builtins[3] = "export";
+	builtins[4] = "unset";
+	builtins[5] = "env";
+	builtins[6] = "exit";
+	builtins[7] = NULL;
+}
+
+void	set_builtin_flag(t_cmd *cmd)
+{
+	char	*builtins[8];
+	int		i;
+
+	if (!cmd->as || !cmd->as[0])
+		return ;
+	i = 0;
+	init_builtins_array(builtins);
+	while (builtins[i])
+	{
+		if (ft_strcmp(cmd->as[0], builtins[i], ft_strlen(builtins[i])) == 0)
+		{
+			cmd->is_builtin = 1;
+			return ;
+		}
+		i++;
+	}
+	cmd->is_builtin = 0;
+}
