@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 15:17:13 by axgimene          #+#    #+#             */
-/*   Updated: 2025/10/31 19:15:46 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/05 16:17:34 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,13 @@ char	*handle_single_quotes(char *str, int *i)
 	int		start;
 	char	*quoted_content;
 
-	start = (*i);
 	++(*i);
+	start = (*i);
 	while(str[*i] && str[*i] != '\'')
 		(*i)++;
 	quoted_content = ft_substr(str, start, *i - start);
+	if (!quoted_content)
+		return (NULL);
 	if(str[*i] == '\'')
 		(*i)++;
 	return (quoted_content);
