@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 14:01:22 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/06 18:58:26 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:28:46 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	init_first_command(t_cmd **head, t_cmd **current_cmd)
 {
-	*current_cmd = create_command();
-	if (!*current_cmd)
-		return ;
-	*head = *current_cmd;
+    *current_cmd = create_command();
+    if (!*current_cmd)
+        return ;
+    *head = *current_cmd;
 }
 
 void	handle_word_token(t_token **token, t_cmd *cmd)
 {
-	add_arg_to_command(cmd, (*token)->value);
-	*token = (*token)->next;
+    add_arg_to_command(cmd, (*token)->value);
+    *token = (*token)->next;
 }
 
 void	handle_pipe_in_parse(t_token **token, t_cmd **cmd)
@@ -31,10 +31,6 @@ void	handle_pipe_in_parse(t_token **token, t_cmd **cmd)
     t_cmd	*new_cmd;
 
     set_builtin_flag(*cmd);
-    
-    // DEBUG: Verificar antes de crear el pipe
-    printf("DEBUG: Antes de pipe() - out_fd=%d\n", (*cmd)->out_fd);
-    
     if (pipe((*cmd)->pipe) == -1)
     {
         perror("pipe");
@@ -42,11 +38,6 @@ void	handle_pipe_in_parse(t_token **token, t_cmd **cmd)
         *cmd = NULL;
         return ;
     }
-    
-    // DEBUG: Verificar después de crear el pipe
-    printf("DEBUG: Pipe creado - pipe[0]=%d, pipe[1]=%d\n", 
-        (*cmd)->pipe[0], (*cmd)->pipe[1]);
-    
     new_cmd = create_command();
     if (!new_cmd)
     {
@@ -56,17 +47,9 @@ void	handle_pipe_in_parse(t_token **token, t_cmd **cmd)
         *cmd = NULL;
         return ;
     }
-    
-    // Configurar file descriptors
     if ((*cmd)->out_fd == -1)
         (*cmd)->out_fd = (*cmd)->pipe[1];
-    
     new_cmd->in_fd = (*cmd)->pipe[0];
-    
-    // DEBUG: Verificar después de configurar
-    printf("DEBUG: Configurado - cmd->out_fd=%d, new_cmd->in_fd=%d\n",
-        (*cmd)->out_fd, new_cmd->in_fd);
-    
     (*cmd)->next = new_cmd;
     *cmd = new_cmd;
     *token = (*token)->next;
@@ -74,9 +57,9 @@ void	handle_pipe_in_parse(t_token **token, t_cmd **cmd)
 
 void	handle_redir_in_parse(t_token **token, t_cmd **cmd)
 {
-	if (!handle_redirection(token, *cmd))
-	{
-		free_commands(cmd);
-		*cmd = NULL;
-	}
+    if (!handle_redirection(token, *cmd))
+    {
+        free_commands(cmd);
+        *cmd = NULL;
+    }
 }

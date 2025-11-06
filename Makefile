@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/06 13:05:15 by axgimene         ###   ########.fr        #
+#    Updated: 2025/11/06 19:35:35 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC = src/main.c \
 	src/parser_parser_init5.c \
 	src/parser_expander6.c \
 	src/parser_expander_utils7.c \
+	src/expander_pollo.c \
 	src/free_clean8.c \
 	src/executor.c
 
