@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/05 13:51:50 by axgimene         ###   ########.fr        #
+#    Updated: 2025/11/06 13:05:15 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRC = src/main.c \
+	src/pollo_token.c \
 	src/parser_tokenizer0.c \
 	src/parser_tokenizer_utils1.c \
 	src/parser_builtins2.c \

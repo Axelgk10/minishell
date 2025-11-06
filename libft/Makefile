@@ -14,7 +14,7 @@ SRC =   ft_isalpha.c ft_isdigit.c ft_isalnum.c \
         ft_strjoin.c ft_strtrim.c ft_split.c \
         ft_itoa.c ft_strmapi.c ft_striteri.c \
         ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c \
-        ft_putnbr_fd.c ft_strcmp.c \
+        ft_putnbr_fd.c ft_strcmp.c ft_strjoin_char.c \
 		printf/ft_print_char.c printf/ft_print_hex_lower.c \
 		printf/ft_print_hex_upper.c printf/ft_print_nbr.c \
 		printf/ft_print_percent.c printf/ft_print_ptr.c \

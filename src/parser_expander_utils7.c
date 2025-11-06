@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/05 11:33:35 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 15:38:26 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,44 @@ static char	*handle_regular_char(char *str, int *i)
 
 char	*handle_double_quotes(t_shell *shell, char *str, int *i)
 {
-    int		start;
-    char	*quoted_content;
     char	*expanded;
+    char	*result;
+    char	*temp;
+    char	buffer[2];
 
     ++(*i);
-    start = (*i);
-	
+    result = ft_strdup("");
+    buffer[1] = '\0';
     while (str[*i] && str[*i] != '"')
-        (*i)++;
-    
-    quoted_content = ft_substr(str, start, *i - start);
-    if (!quoted_content)
-        return (NULL);
-    
-    expanded = expand_string(shell, quoted_content);
-    free(quoted_content);
-    
+    {
+        if (str[*i] == '\'')
+        {
+            buffer[0] = '\'';
+            temp = result;
+            result = ft_strjoin(result, buffer);
+            free(temp);
+            (*i)++;
+        }
+        else if (str[*i] == '$' && str[*i + 1] && !is_dollar_terminator(str[*i + 1]))
+        {
+            expanded = expand_dollar(shell, str, i);
+            temp = result;
+            result = ft_strjoin(result, expanded);
+            free(temp);
+            free(expanded);
+        }
+        else
+        {
+            buffer[0] = str[*i];
+            temp = result;
+            result = ft_strjoin(result, buffer);
+            free(temp);
+            (*i)++;
+        }
+    }
     if (str[*i] == '"')
         (*i)++;
-    
-    return (expanded);
+    return (result);
 }
 
 static char	*process_char_in_expansion(t_shell *shell, char *str, int *i)

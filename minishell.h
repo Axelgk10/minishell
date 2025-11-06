@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/05 13:56:17 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 13:07:59 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int		handle_append_redirection(char *filename);
 int		handle_output_redirection(char *filename);
 int		handle_input_redirection(char *filename);
 int		handle_heredoc(char *delimiter);
+void	handle_quotes_in_token(char *input, int *i, char *quote);
 
 
 // Execution functions

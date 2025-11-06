@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 12:38:04 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/05 17:06:32 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 13:06:06 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,57 +65,4 @@ void	handle_quotes_in_token(char *input, int *i, char *quote)
 		*quote = 0;
 		return ;
 	}
-}
-
-char	*extract_word(char *input, int *i)
-{
-    int		start;
-    int		len;
-    char	quote;
-    char	*word;
-    char	*result;
-    int		j;
-    int		k;
-
-    start = *i;
-    len = 0;
-    quote = 0;
-    while (input[*i] && (!is_metachar(input[*i]) || quote))
-    {
-        handle_quotes_in_token(input, i, &quote);
-        if (!input[*i])
-            break ;
-        len++;
-        (*i)++;
-    }
-    word = ft_substr(input, start, len);
-    if (!word)
-        return (NULL);
-    result = malloc(len + 1);
-    if (!result)
-        return (free(word), NULL);
-    j = 0;
-    k = 0;
-    quote = 0;
-    while (word[j])
-    {
-        if ((word[j] == '\'' || word[j] == '"') && !quote)
-        {
-            quote = word[j];
-            j++;
-            continue ;
-        }
-        else if (word[j] == quote)
-        {
-            quote = 0;
-            j++;
-            continue ;
-        }
-        result[k] = word[j];
-        k++;
-        j++;
-    }
-    result[k] = '\0';
-    free(word);
-    return (result);
 }
