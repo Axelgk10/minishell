@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:06:33 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/03 18:32:21 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:27:06 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static void free_command_args_and_fds(t_cmd *cmd)
 	
 	if (!cmd)
 		return ;
-	if (cmd->as)
+	if (cmd->av)
 	{
 		i = 0;
-		while (cmd->as[i])
-			free(cmd->as[i++]);
-		free(cmd->as);
+		while (cmd->av[i])
+			free(cmd->av[i++]);
+		free(cmd->av);
 	}
 	if (cmd->in_fd > 2)
 			close(cmd->in_fd);

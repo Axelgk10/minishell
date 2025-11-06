@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:45:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/03 13:45:55 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:25:30 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	set_builtin_flag(t_cmd *cmd)
 	char	*builtins[8];
 	int		i;
 
-	if (!cmd->as || !cmd->as[0])
+	if (!cmd->av || !cmd->av[0])
 		return ;
 	i = 0;
 	init_builtins_array(builtins);
 	while (builtins[i])
 	{
-		if (ft_strcmp(cmd->as[0], builtins[i], ft_strlen(builtins[i])) == 0)
+		if (ft_strcmp(cmd->av[0], builtins[i], ft_strlen(builtins[i])) == 0)
 		{
 			cmd->is_builtin = 1;
 			return ;

@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/06 13:07:59 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 18:24:46 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ typedef struct s_token
 // Command structure
 typedef struct s_cmd
 {
-	char			**as;
 	char			**av;
 	int				in_fd;
 	int				out_fd;

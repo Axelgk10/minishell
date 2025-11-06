@@ -13,24 +13,24 @@ int	builtin_echo(t_cmd *cmd)
     int	i;
     int	newline;
 
-    if (!cmd || !cmd->as)
+    if (!cmd || !cmd->av)
         return (0);
 
     newline = 1;
     i = 1;
     
     // Verificar flag -n
-    if (cmd->as[i] && ft_strncmp(cmd->as[i], "-n", 2) == 0)
+    if (cmd->av[i] && ft_strncmp(cmd->av[i], "-n", 2) == 0)
     {
         newline = 0;
         i++;
     }
 
     // Imprimir argumentos
-    while (cmd->as[i])
+    while (cmd->av[i])
     {
-        ft_putstr_fd(cmd->as[i], STDOUT_FILENO);
-        if (cmd->as[i + 1])
+        ft_putstr_fd(cmd->av[i], STDOUT_FILENO);
+        if (cmd->av[i + 1])
             ft_putstr_fd(" ", STDOUT_FILENO);
         i++;
     }
@@ -77,11 +77,11 @@ int	builtin_cd(t_shell *shell, t_cmd *cmd)
 
     (void)shell;
     
-    if (!cmd || !cmd->as)
+    if (!cmd || !cmd->av)
         return (1);
 
     // Si no hay argumento, ir a HOME
-    if (!cmd->as[1])
+    if (!cmd->av[1])
     {
         path = getenv("HOME");
         if (!path)
@@ -91,7 +91,7 @@ int	builtin_cd(t_shell *shell, t_cmd *cmd)
         }
     }
     else
-        path = cmd->as[1];
+        path = cmd->av[1];
 
     if (chdir(path) == -1)
     {
@@ -111,8 +111,8 @@ int	builtin_exit(t_shell *shell, t_cmd *cmd)
     int	status;
 
     status = 0;
-    if (cmd->as[1])
-        status = ft_atoi(cmd->as[1]);
+    if (cmd->av[1])
+        status = ft_atoi(cmd->av[1]);
     else
         status = shell->exit_status;
 
@@ -131,7 +131,7 @@ int	builtin_export(t_shell *shell, t_cmd *cmd)
         return (1);
 
     // Si no hay argumentos, mostrar entorno
-    if (!cmd->as[1])
+    if (!cmd->av[1])
         return (builtin_env(shell));
 
     i = 0;
@@ -154,22 +154,22 @@ int	builtin_unset(t_shell *shell, t_cmd *cmd)
 
 int	execute_builtin(t_shell *shell, t_cmd *cmd)
 {
-    if (!cmd || !cmd->as || !cmd->as[0])
+    if (!cmd || !cmd->av || !cmd->av[0])
         return (1);
 
-    if (ft_strncmp(cmd->as[0], "echo", 4) == 0)
+    if (ft_strncmp(cmd->av[0], "echo", 4) == 0)
         return (builtin_echo(cmd));
-    else if (ft_strncmp(cmd->as[0], "cd", 2) == 0)
+    else if (ft_strncmp(cmd->av[0], "cd", 2) == 0)
         return (builtin_cd(shell, cmd));
-    else if (ft_strncmp(cmd->as[0], "pwd", 3) == 0)
+    else if (ft_strncmp(cmd->av[0], "pwd", 3) == 0)
         return (builtin_pwd());
-    else if (ft_strncmp(cmd->as[0], "env", 3) == 0)
+    else if (ft_strncmp(cmd->av[0], "env", 3) == 0)
         return (builtin_env(shell));
-    else if (ft_strncmp(cmd->as[0], "exit", 4) == 0)
+    else if (ft_strncmp(cmd->av[0], "exit", 4) == 0)
         return (builtin_exit(shell, cmd));
-    else if (ft_strncmp(cmd->as[0], "export", 6) == 0)
+    else if (ft_strncmp(cmd->av[0], "export", 6) == 0)
         return (builtin_export(shell, cmd));
-    else if (ft_strncmp(cmd->as[0], "unset", 5) == 0)
+    else if (ft_strncmp(cmd->av[0], "unset", 5) == 0)
         return (builtin_unset(shell, cmd));
 
     return (1);
@@ -184,7 +184,7 @@ int	execute_single_command(t_shell *shell, t_cmd *cmd)
     pid_t	pid;
     int		status;
 
-    if (!shell || !cmd || !cmd->as || !cmd->as[0])
+    if (!shell || !cmd || !cmd->av || !cmd->av[0])
         return (1);
 
     // Si es un builtin, ejecutarlo directamente
@@ -217,8 +217,8 @@ int	execute_single_command(t_shell *shell, t_cmd *cmd)
         }
 
         // Ejecutar comando
-        execvp(cmd->as[0], cmd->as);
-        perror(cmd->as[0]);
+        execvp(cmd->av[0], cmd->av);
+        perror(cmd->av[0]);
         exit(127);
     }
 
@@ -316,8 +316,8 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
             // Ejecutar comando
             if (current->is_builtin)
                 exit(execute_builtin(shell, current));
-            execvp(current->as[0], current->as);
-            perror(current->as[0]);
+            execvp(current->av[0], current->av);
+            perror(current->av[0]);
             exit(127);
         }
 
