@@ -357,10 +357,39 @@ int	execute_commands(t_shell *shell)
     if (!shell || !shell->commands)
         return (1);
 
-    // Si hay solo un comando
-    if (!shell->commands->next)
-        return (execute_single_command(shell, shell->commands));
+		int	i;
 
-    // Si hay múltiples comandos (pipeline)
-    return (execute_pipeline(shell, shell->commands));
+	i = 0;
+	if (!shell || !shell->commands)
+		return (1);
+
+	printf("Stdin: %d\n", shell->stdin_copy);
+	printf("Stdout: %d\n", shell->stdout_copy);
+	printf("Exit Status: %d\n", shell->exit_status);
+	printf("/////////////////////Commands///////////////////////////\n");
+	while(shell->commands)
+	{
+		printf("FDdin: %d\n", shell->commands->in_fd);
+		printf("FDout: %d\n", shell->commands->out_fd);
+		printf("Pipe 0: %d\n", shell->commands->pipe[0]);
+		printf("Pipe 1: %d\n", shell->commands->pipe[1]);
+		printf("Is Built in: %d\n", shell->commands->is_builtin);
+		printf("Stdin: %d\n", shell->stdin_copy);
+		printf("Stdout: %d\n", shell->stdout_copy);
+		i = 0;
+		while(shell->commands->av[i])
+		{
+			printf("Av %d: %s\n", i,shell->commands->av[i]);
+			i++;
+		}
+		printf("////////////////////////////////////////////////\n");
+		shell->commands = shell->commands->next;
+	}
+    // // Si hay solo un comando
+    // if (!shell->commands->next)
+    //     return (execute_single_command(shell, shell->commands));
+
+    // // Si hay múltiples comandos (pipeline)
+    // return (execute_pipeline(shell, shell->commands));
+	return (0);
 }
