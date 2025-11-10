@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 13:50:28 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/05 14:53:49 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:22:51 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,25 @@ static void handle_redirection_mid(t_token_type type, char *filename, t_cmd *cmd
 {	
 	if (type == T_REDIR_IN)
 	{
-		if (cmd->in_fd >= 0)
+		if (cmd->in_fd >= 3)
 			close(cmd->in_fd);
 		cmd->in_fd = handle_input_redirection(filename);
 	}
 	else if (type == T_REDIR_OUT)
 	{
-		if (cmd->out_fd >= 0)
+		if (cmd->out_fd >= 3)
 			close(cmd->out_fd);
 		cmd->out_fd = handle_output_redirection(filename);
 	}
 	else if (type == T_APPEND)
 	{
-		if (cmd->out_fd >= 0)
+		if (cmd->out_fd >= 3)
 			close(cmd->out_fd);
 		cmd->out_fd = handle_append_redirection(filename);
 	}
 	else if (type == T_HEREDOC)
 	{
-		if (cmd->in_fd >= 0)
+		if (cmd->in_fd >= 3)
 			close(cmd->in_fd);
 		cmd->in_fd = handle_heredoc(filename);
 	}

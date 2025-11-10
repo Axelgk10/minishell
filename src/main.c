@@ -1,4 +1,4 @@
-	// /* ************************************************************************** */
+// /* ************************************************************************** */
 	// /*                                                                            */
 	// /*                                                        :::      ::::::::   */
 	// /*   main.c                                             :+:      :+:    :+:   */
@@ -101,11 +101,7 @@
 	// return (0);
 	// }
 
-	// int	execute_pipeline(t_shell *shell)
-	// {
-	// (void)shell;
-	// return (0);
-	// }
+	// // ✅ ELIMINADA: execute_pipeline - Ya está en executor.c
 
 	// void	handle_redirections(t_cmd *cmd)
 	// {
@@ -194,8 +190,6 @@
 	// }
 
 	// // ============================================================================
-	// // MAIN - Función principal
-	// // ============================================================================
 
 	// int	main(int argc, char **argv, char **env)
 	// {
@@ -237,24 +231,24 @@
 
 	// // Procesar input
 	// shell.tokens = tokenize(input);
-
+	// printf("%s\n", input);
+	// fflush(stdout);
 	// if (shell.tokens)
 	// {
-	// // Expandir variables
 	// expand_variables(&shell, shell.tokens);
-
-	// // Parsear tokens en comandos
-	// shell.commands = parse_tokens(&shell.tokens);
-
-	// // Ejecutar comandos
+	// shell.commands = parse_tokens(&shell.tokens);  // ← AGREGA ESTA LÍNEA
+	// fflush(stderr);
+	
 	// if (shell.commands)
 	// {
 	// execute_commands(&shell);
 	// free_commands(&shell.commands);
 	// shell.commands = NULL;
 	// }
-
-	// // Liberar tokens
+	// else
+	// {
+	// shell.exit_status = 2;
+	// }
 	// free_tokens(&shell.tokens);
 	// shell.tokens = NULL;
 	// }
@@ -405,26 +399,22 @@ int	main(int argc, char **argv, char **env)
     while (1)
     {
         input = readline("minishell$ ");
-        
         if (!input)
         {
             printf("exit\n");
             break ;
         }
-        if (*input)
+        if (input[0])
             add_history(input);
-        
-        if (ft_strncmp(input, "exit", 4) == 0)
-        {
-            free(input);
-            break ;
-        }
-        
+
+        // Tokenizar
         shell.tokens = tokenize(input);
-        printf("%s\n", input);
         if (shell.tokens)
         {
+            // Expandir variables
             expand_variables(&shell, shell.tokens);
+            
+            // ← AGREGAR ESTA LÍNEA
             shell.commands = parse_tokens(&shell.tokens);
             
             if (shell.commands)
@@ -433,15 +423,17 @@ int	main(int argc, char **argv, char **env)
                 free_commands(&shell.commands);
                 shell.commands = NULL;
             }
-            
+            else
+            {
+                // Error de sintaxis
+                shell.exit_status = 2;
+            }
             free_tokens(&shell.tokens);
             shell.tokens = NULL;
         }
-        
         free(input);
     }
     
     cleanup_shell(&shell);
-    
     return (shell.exit_status);
 }

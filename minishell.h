@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/06 18:24:46 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:12:17 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int		handle_output_redirection(char *filename);
 int		handle_input_redirection(char *filename);
 int		handle_heredoc(char *delimiter);
 void	handle_quotes_in_token(char *input, int *i, char *quote);
+void free_command_args_and_fds(t_cmd *cmd);
 
 
 // Execution functions
