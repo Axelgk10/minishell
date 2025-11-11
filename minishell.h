@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/10 19:12:17 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:22:03 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ typedef struct s_shell
 // Main
 void	init_shell(t_shell *shell, char **env);
 void	cleanup_shell(t_shell *shell);
+
 // Parser tokenizer
 int	is_metachar(char c);
 t_token_type	get_token_type(char *str);
@@ -129,8 +130,12 @@ int		handle_output_redirection(char *filename);
 int		handle_input_redirection(char *filename);
 int		handle_heredoc(char *delimiter);
 void	handle_quotes_in_token(char *input, int *i, char *quote);
-void free_command_args_and_fds(t_cmd *cmd);
-
+void 	free_command_args_and_fds(t_cmd *cmd);
+int		is_redirection_token(t_token_type type);
+int		is_valid_redir_sequence(t_token *token);
+int		setup_pipe_fds(t_cmd *current_cmd, t_cmd *new_cmd);
+int		handle_pipe_token(t_token **current_token, t_cmd **current_cmd);
+int		validate_final_command(t_cmd *current_cmd);
 
 // Execution functions
 int	execute_commands(t_shell *shell);
@@ -151,6 +156,7 @@ int	builtin_unset(t_shell *shell, t_cmd *cmd);
 void	setup_signals(void);
 void	handle_sigint(int sig);
 void	handle_sigquit(int sig);
+
 // Utils
 char	*find_executable(char *cmd, char **env);
 void	free_tokens(t_token **tokens);

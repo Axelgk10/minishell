@@ -6,12 +6,11 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:00:23 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/05 13:57:03 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:54:01 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 int	handle_heredoc(char *delimiter)
 {
@@ -43,7 +42,7 @@ int	handle_heredoc(char *delimiter)
 int	handle_input_redirection(char *filename)
 {
 	int	fd;
-	
+
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{

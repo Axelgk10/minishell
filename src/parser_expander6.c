@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 15:17:13 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/06 15:57:49 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:33:28 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*get_env_value(t_shell *shell, char *var_name)
 	len = ft_strlen(var_name);
 	while (shell->env[i])
 	{
-		if (ft_strcmp(shell->env[i], var_name, len) == 0 && shell->env[i][len] == '=')
+		if (ft_strcmp(shell->env[i], var_name, len) == 0
+			&& shell->env[i][len] == '=')
 			return (ft_strdup(&shell->env[i][len + 1]));
 		i++;
 	}
@@ -44,6 +45,7 @@ static char	*extract_var_name(char *str, int *i)
 		(*i)++;
 	return (ft_substr(str, start, *i - start));
 }
+
 int	is_dollar_terminator(char c)
 {
 	return (c == ' ' || c == '\'' || c == '"' || c == '$' || c == '=');
@@ -69,18 +71,17 @@ char	*expand_dollar(t_shell *shell, char *str, int *i)
 
 char	*handle_single_quotes(char *str, int *i)
 {
-    int		start;
-    char	*quoted_content;
+	int		start;
+	char	*quoted_content;
 
-    ++(*i);
-    start = *i;
-    while (str[*i] && str[*i] != '\'')
-        (*i)++;
-    quoted_content = ft_substr(str, start, *i - start);
-    if (!quoted_content)
-        return (NULL);
-    if (str[*i] == '\'')
-        (*i)++;
-    return (quoted_content);
+	++(*i);
+	start = *i;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	quoted_content = ft_substr(str, start, *i - start);
+	if (!quoted_content)
+		return (NULL);
+	if (str[*i] == '\'')
+		(*i)++;
+	return (quoted_content);
 }
-

@@ -6,14 +6,15 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 13:50:28 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/10 17:22:51 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:53:24 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void handle_redirection_mid(t_token_type type, char *filename, t_cmd *cmd)
-{	
+static void	handle_redirection_mid(t_token_type type,
+	char *filename, t_cmd *cmd)
+{
 	if (type == T_REDIR_IN)
 	{
 		if (cmd->in_fd >= 3)

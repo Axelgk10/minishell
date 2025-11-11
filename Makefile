@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/10 17:59:23 by axgimene         ###   ########.fr        #
+#    Updated: 2025/11/11 13:26:13 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC = src/main.c \
 	src/parser_parser_args2.c \
 	src/parser_redirectionsPollitos3.c \
 	src/parser_redirectionsPollo.c \
+	src/message_error_main.c \
 	src/parser_parser_main4.c \
 	src/parser_parser_init5.c \
 	src/parser_expander6.c \
