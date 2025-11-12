@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/11 13:26:13 by axgimene         ###   ########.fr        #
+#    Updated: 2025/11/12 12:11:33 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,19 +21,19 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRC = src/main.c \
-	src/pollo_token.c \
+	src/chicken_token.c \
 	src/parser_tokenizer0.c \
 	src/parser_tokenizer_utils1.c \
 	src/parser_builtins2.c \
 	src/parser_parser_args2.c \
-	src/parser_redirectionsPollitos3.c \
-	src/parser_redirectionsPollo.c \
+	src/parser_redirections_little_chickens3.c \
+	src/parser_redirections_Chicken.c \
 	src/message_error_main.c \
 	src/parser_parser_main4.c \
 	src/parser_parser_init5.c \
 	src/parser_expander6.c \
 	src/parser_expander_utils7.c \
-	src/expander_pollo.c \
+	src/expander_chicken.c \
 	src/free_clean8.c \
 	src/executor.c
 
