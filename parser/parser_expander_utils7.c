@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/27 17:28:47 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/27 20:02:24 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ static char	*handle_regular_char(char *str, int *i)
 
 static char	*process_char_in_expansion(t_shell *shell, char *str, int *i)
 {
+    (void)shell;
     if (str[*i] == '\'')
         return (handle_single_quotes(str, i));
     else if (str[*i] == '"')
-        return (handle_double_quotes(shell, str, i));
+        return (handle_double_quotes(g_shell, str, i));
     else if (str[*i] == '$' && str[*i + 1]
         && !is_dollar_terminator(str[*i + 1]))
-        return (expand_dollar(shell, str, i));
+        return (expand_dollar(g_shell, str, i));
     else
         return (handle_regular_char(str, i));
 }
@@ -73,6 +74,11 @@ void	expand_variables(t_token *tokens)
         if (current->value)
         {
             expanded = remove_quotes_from_token(current->value);
+			if (!expanded)
+			{
+				current = current->next;
+				continue;
+			}
             free(current->value);
             current->value = expanded;
         }
@@ -80,7 +86,7 @@ void	expand_variables(t_token *tokens)
     }
 }
 
-char	*expand_string(t_shell *shell, char *str)
+char	*expand_string(char *str)
 {
     int		i;
     char	*result;
@@ -95,9 +101,12 @@ char	*expand_string(t_shell *shell, char *str)
         return (NULL);
     while (str[i])
     {
-        part = process_char_in_expansion(shell, str, &i);
+        part = process_char_in_expansion(g_shell, str, &i);
         if (!part)
-            continue;
+        {
+            free(result);
+            return (NULL);
+        }
         new_result = ft_strjoin(result, part);
         free(part);
         if (!new_result)

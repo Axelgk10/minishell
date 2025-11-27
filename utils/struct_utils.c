@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:43 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/27 18:58:02 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/27 20:05:53 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,35 @@ void	cleanup_shell(t_shell *shell)
 
     if (!shell)
         return ;
+    
+    // ✅ Close file descriptors safely
+    if (shell->stdin_copy > 0)
+        close(shell->stdin_copy);
+    if (shell->stdout_copy > 0)
+        close(shell->stdout_copy);
+    
+    // ✅ Free prompt safely
     if (shell->prompt)
     {
         free(shell->prompt);
         shell->prompt = NULL;
     }
+    
+    // ✅ Free tokens safely
     if (shell->tokens)
     {
         free_tokens(&shell->tokens);
         shell->tokens = NULL;
     }
+    
+    // ✅ Free commands safely
     if (shell->commands)
     {
         free_commands(&shell->commands);
         shell->commands = NULL;
     }
-    if (shell->stdin_copy > 2)
-        close(shell->stdin_copy);
-    if (shell->stdout_copy > 2)
-        close(shell->stdout_copy);
     
-    // ✅ Verifica que env no sea NULL
+    // ✅ Verify env is not NULL before freeing
     if (shell->env)
     {
         i = 0;
@@ -119,7 +127,8 @@ void	cleanup_shell(t_shell *shell)
         free(shell->env);
         shell->env = NULL;
     }
-    // ✅ Verifica que local_vars no sea NULL
+    
+    // ✅ Verify local_vars is not NULL before freeing
     if (shell->local_vars)
     {
         i = 0;

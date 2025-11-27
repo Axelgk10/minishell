@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_expander6.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 15:17:13 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/26 11:36:04 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:36:43 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*get_env_value(t_shell *shell, char *var_name)
 		return (ft_itoa(shell->exit_status));
 	i = 0;
 	len = ft_strlen(var_name);
-	while (shell->env[i])
+	while (shell->env && shell->env[i])
 	{
 		if (ft_strncmp(shell->env[i], var_name, len) == 0
 			&& shell->env[i][len] == '=')
@@ -31,7 +31,7 @@ static char	*get_env_value(t_shell *shell, char *var_name)
 		i++;
 	}
 	i = 0;
-	while (shell->local_vars[i])
+	while (shell->local_vars && shell->local_vars[i])
 	{
 		if (ft_strncmp(shell->local_vars[i], var_name, len) == 0
 			&& shell->local_vars[i][len] == '=')

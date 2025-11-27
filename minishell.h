@@ -64,6 +64,7 @@ typedef struct s_shell
 }	t_shell;
 
 extern int g_exit_status;
+extern t_shell *g_shell;
 
 //dir_manager
 int		change_directory(char *path);
@@ -139,7 +140,7 @@ t_token	*tokenize(char *input);
 int		check_unclosed_quotes(char *input);
 t_cmd	*parse_tokens(t_token *tokens);
 void	expand_variables(t_token *tokens);  // ✅ Sin shell
-char	*expand_string(t_shell *shell, char *str);
+char	*expand_string(char *str);
 char	*handle_single_quotes(char *str, int *i);
 char	*handle_double_quotes(t_shell *shell, char *str, int *i);
 char	*extract_word(char *input, int *i);

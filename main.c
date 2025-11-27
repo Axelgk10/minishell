@@ -7,7 +7,10 @@ t_shell *g_shell = NULL;
 void	cleanup_on_exit(void)
 {
     if (g_shell)
+    {
         cleanup_shell(g_shell);
+        rl_clear_history();
+    }
 }
 
 void	free_shell_after_execution(t_shell *shell)
@@ -93,6 +96,18 @@ static void	process_input(t_shell	*shell, char *input)
     free(input);
 }
 
+static void	update_prompt(t_shell *shell)
+{
+    char	*cwd;
+
+    if (shell->prompt)
+        free(shell->prompt);
+    cwd = getcwd(NULL, 0);
+    shell->prompt = format_cwd(cwd);
+    if (cwd)
+        free(cwd);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
     char	*input;
@@ -102,6 +117,8 @@ int	main(int argc, char **argv, char **envp)
     (void)argv;
     ft_memset(&shell, 0, sizeof(t_shell));
     g_shell = &shell;
+    shell.stdin_copy = dup(STDIN_FILENO);
+    shell.stdout_copy = dup(STDOUT_FILENO);
     atexit(cleanup_on_exit);
     init_shell(&shell, envp);
     init_signals();
@@ -113,9 +130,13 @@ int	main(int argc, char **argv, char **envp)
             ft_putstr_fd("exit\n", STDOUT_FILENO);
             break ;
         }
-        process_input(&shell, input);
-        free(input);
-        // ✅ Verifica si fue exit
+        if(*input)
+        {
+            process_input(&shell, input);
+            update_prompt(&shell);
+        }
+        else
+            free(input);
         if (shell.commands && !ft_strcmp(shell.commands->av[0], "exit"))
             break ;
     }
