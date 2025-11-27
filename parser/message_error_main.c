@@ -50,13 +50,14 @@ int	handle_pipe_token(t_token **current_token, t_cmd **current_cmd)
 {
     t_cmd	*new_cmd;
 
+    (void)current_token;  // ✅ Ahora el loop principal avanza el puntero
     if (!(*current_cmd)->av || !(*current_cmd)->av[0])
     {
         ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
         return (0);
     }
     set_builtin_flag(*current_cmd);
-    *current_token = (*current_token)->next;
+    // ✅ NO AVANCES AQUI - El loop principal en process_all_tokens() lo hace
     new_cmd = create_command();
     if (!new_cmd)
     {

@@ -6,129 +6,126 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:43 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/27 20:05:53 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/24 20:17:03 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**copy_env(char **env)
-{
-    char	**new_env;
-    int		i;
-    int		count;
-    int		j;
-
-    if (!env)
-        return (NULL);
-    count = 0;
-    while (env[count])
-        count++;
-    new_env = malloc(sizeof(char *) * (count + 1));
-    if (!new_env)
-        return (NULL);
-    i = 0;
-    while (i < count)
-    {
-        new_env[i] = ft_strdup(env[i]);
-        if (!new_env[i])
-        {
-            j = 0;
-            while (j < i)
-            {
-                free(new_env[j]);
-                new_env[j] = NULL;
-                j++;
-            }
-            free(new_env);
-            new_env = NULL;
-            return (NULL);
-        }
-        i++;
-    }
-    new_env[count] = NULL;
-    return (new_env);
-}
-
 void	init_shell(t_shell *shell, char **envp)
 {
-    char	*cwd;
+    int		env_count;
+    int		i;
 
     if (!shell)
         return ;
-    cwd = getcwd(NULL, 0);
-    shell->prompt = format_cwd(cwd);
-    if (cwd)
-        free(cwd);
+    
+    // ✅ Inicializar primero para seguridad (en caso de cleanup anticipado)
+    shell->env = NULL;
+    shell->env_count = 0;
+    shell->local_vars = NULL;
     shell->tokens = NULL;
     shell->commands = NULL;
+    shell->prompt = NULL;
     shell->exit_status = 0;
-    shell->stdin_copy = dup(STDIN_FILENO);
-    shell->stdout_copy = dup(STDOUT_FILENO);
-    shell->env = copy_env(envp);
+    shell->stdin_copy = STDIN_FILENO;
+    shell->stdout_copy = STDOUT_FILENO;
+    
+    // Copiar variables de entorno
+    env_count = 0;
+    while (envp && envp[env_count])
+        env_count++;
+    
+    shell->env = malloc((env_count + 1) * sizeof(char *));
     if (!shell->env)
     {
-        shell->env = malloc(sizeof(char *));
-        if (shell->env)
-            shell->env[0] = NULL;
+        ft_putstr_fd("Error: malloc failed\n", STDERR_FILENO);
+        exit(1);
     }
-    // ✅ CRÍTICO: Inicializa local_vars AQUÍ
-    shell->local_vars = malloc(sizeof(char *));
-    if (shell->local_vars)
-        shell->local_vars[0] = NULL;
-    else
-        shell->local_vars = NULL;  // ✅ Asegúrate de que sea NULL si falla
+    
+    // ✅ SET env_count BEFORE strdup calls in case of failure
+    shell->env_count = env_count;
+    
+    i = 0;
+    while (i < env_count)
+    {
+        shell->env[i] = ft_strdup(envp[i]);
+        if (!shell->env[i])
+        {
+            // ✅ Si strdup falla, limpiar lo que ya fue asignado
+            int j = 0;
+            while (j < i)
+            {
+                free(shell->env[j]);
+                j++;
+            }
+            free(shell->env);
+            shell->env = NULL;
+            shell->env_count = 0;
+            ft_putstr_fd("Error: malloc failed\n", STDERR_FILENO);
+            exit(1);
+        }
+        i++;
+    }
+    shell->env[env_count] = NULL;
 }
 
 void	cleanup_shell(t_shell *shell)
 {
-    int	i;
-
+    int i;
+    
     if (!shell)
         return ;
     
-    // ✅ Close file descriptors safely
-    if (shell->stdin_copy > 0)
-        close(shell->stdin_copy);
-    if (shell->stdout_copy > 0)
-        close(shell->stdout_copy);
+    // Liberar environment (copiado en init_shell)
+    if (shell->env && shell->env_count > 0)
+    {
+        i = 0;
+        // ✅ Liberar todos los strings en el array
+        // El array tiene indices 0 a env_count-1 con strings
+        // E índice env_count tiene NULL
+        while (i < shell->env_count)
+        {
+            if (shell->env[i])
+            {
+                free(shell->env[i]);
+                shell->env[i] = NULL;
+            }
+            i++;
+        }
+        // ✅ Liberar el array mismo (que contiene los punteros)
+        free(shell->env);
+        shell->env = NULL;
+    }
+    else if (shell->env)
+    {
+        // If env_count is 0 but env is allocated, free it anyway
+        free(shell->env);
+        shell->env = NULL;
+    }
     
-    // ✅ Free prompt safely
+    // Liberar prompt
     if (shell->prompt)
     {
         free(shell->prompt);
         shell->prompt = NULL;
     }
     
-    // ✅ Free tokens safely
+    // Liberar tokens
     if (shell->tokens)
     {
         free_tokens(&shell->tokens);
         shell->tokens = NULL;
     }
     
-    // ✅ Free commands safely
+    // Liberar commands
     if (shell->commands)
     {
         free_commands(&shell->commands);
         shell->commands = NULL;
     }
     
-    // ✅ Verify env is not NULL before freeing
-    if (shell->env)
-    {
-        i = 0;
-        while (shell->env[i])
-        {
-            free(shell->env[i]);
-            shell->env[i] = NULL;
-            i++;
-        }
-        free(shell->env);
-        shell->env = NULL;
-    }
-    
-    // ✅ Verify local_vars is not NULL before freeing
+    // Liberar local_vars
     if (shell->local_vars)
     {
         i = 0;
@@ -145,32 +142,32 @@ void	cleanup_shell(t_shell *shell)
 
 void	check_struct(t_shell *shell)
 {
-	int i;
-	t_cmd *current;
+    int i;
+    t_cmd *current;
 
-	i = 0;
-	printf("Stdin: %d\n", shell->stdin_copy);
-	printf("Stdout: %d\n", shell->stdout_copy);
-	printf("Exit Status: %d\n", shell->exit_status);
-	printf("/////////////////////Commands///////////////////////////\n");
-	current = shell->commands;  // Usar una variable temporal
-	while(current)
-	{
-		printf("FDdin: %d\n", current->in_fd);
-		printf("FDout: %d\n", current->out_fd);
-		printf("Pipe 0: %d\n", current->pipe[0]);
-		printf("Pipe 1: %d\n", current->pipe[1]);
-		printf("Is Built in: %d\n", current->is_builtin);
-		i = 0;
-		if (current->av)  // Verificar que av no sea NULL
-		{
-			while(current->av[i])
-			{
-				printf("As %d: %s\n", i, current->av[i]);
-				i++;
-			}
-		}
-		printf("////////////////////////////////////////////////\n");
-		current = current->next;  // Mover solo la variable temporal
-	}
+    i = 0;
+    printf("Stdin: %d\n", shell->stdin_copy);
+    printf("Stdout: %d\n", shell->stdout_copy);
+    printf("Exit Status: %d\n", shell->exit_status);
+    printf("/////////////////////Commands///////////////////////////\n");
+    current = shell->commands;  // Usar una variable temporal
+    while(current)
+    {
+        printf("FDdin: %d\n", current->in_fd);
+        printf("FDout: %d\n", current->out_fd);
+        printf("Pipe 0: %d\n", current->pipe[0]);
+        printf("Pipe 1: %d\n", current->pipe[1]);
+        printf("Is Built in: %d\n", current->is_builtin);
+        i = 0;
+        if (current->av)  // Verificar que av no sea NULL
+        {
+            while(current->av[i])
+            {
+                printf("As %d: %s\n", i, current->av[i]);
+                i++;
+            }
+        }
+        printf("////////////////////////////////////////////////\n");
+        current = current->next;  // Mover solo la variable temporal
+    }
 }

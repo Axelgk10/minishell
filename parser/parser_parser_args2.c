@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:57:41 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/27 17:25:06 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/24 18:48:42 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,33 @@ void	copy_old_args(t_cmd *cmd, char **new_args, int count)
 
 void	add_arg_to_command(t_cmd *cmd, char *arg)
 {
-    char	*new_arg;
+    char	**new_av;
+    int		i;
 
     if (!cmd || !arg)
-        return ;
-    new_arg = ft_strdup(arg);
-    if (!new_arg)
-        return ;
-    cmd->av = realloc(cmd->av, sizeof(char *) * (cmd->ac + 2));
-    if (!cmd->av)
+        return;
+    
+    new_av = malloc(sizeof(char *) * (cmd->ac + 2));
+    if (!new_av)
+        return;
+    
+    i = 0;
+    while (i < cmd->ac)
     {
-        free(new_arg);
-        return ;
+        new_av[i] = cmd->av[i];
+        i++;
     }
-    cmd->av[cmd->ac] = new_arg;
+    new_av[i] = ft_strdup(arg);
+    if (!new_av[i])  // ✅ Verifica si ft_strdup falló
+    {
+        free(new_av);
+        return;
+    }
+    new_av[i + 1] = NULL;
+    
+    if (cmd->av)
+        free(cmd->av);
+    
+    cmd->av = new_av;
     cmd->ac++;
-    cmd->av[cmd->ac] = NULL;
 }

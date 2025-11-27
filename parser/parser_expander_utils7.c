@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/27 20:02:24 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:35:03 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,45 +25,33 @@ static char	*handle_regular_char(char *str, int *i)
 
 static char	*process_char_in_expansion(t_shell *shell, char *str, int *i)
 {
-    (void)shell;
     if (str[*i] == '\'')
         return (handle_single_quotes(str, i));
     else if (str[*i] == '"')
-        return (handle_double_quotes(g_shell, str, i));
+        return (handle_double_quotes(shell, str, i));
     else if (str[*i] == '$' && str[*i + 1]
         && !is_dollar_terminator(str[*i + 1]))
-        return (expand_dollar(g_shell, str, i));
+        return (expand_dollar(shell, str, i));
     else
         return (handle_regular_char(str, i));
 }
 
-// ✅ Añade esta función aquí
-static char	*remove_quotes_from_token(char *token)
+// ✅ FUNCIÓN HELPER PARA DETECTAR SI HAY EXPANSIÓN
+static int	requires_expansion(char *str)
 {
-    char	*result;
-    int		len;
-    int		start;
-    int		end;
+    int	i;
 
-    if (!token || token[0] == '\0')
-        return (ft_strdup(""));
-    len = ft_strlen(token);
-    start = 0;
-    end = len;
-    if (len >= 2 && ((token[0] == '"' && token[len - 1] == '"') || 
-        (token[0] == '\'' && token[len - 1] == '\'')))
+    i = 0;
+    while (str[i])
     {
-        start = 1;
-        end = len - 1;
+        if (str[i] == '$' && str[i + 1] && !is_dollar_terminator(str[i + 1]))
+            return (1);
+        i++;
     }
-    result = malloc(end - start + 1);
-    if (!result)
-        return (NULL);
-    ft_strlcpy(result, token + start, end - start + 1);
-    return (result);
+    return (0);
 }
 
-void	expand_variables(t_token *tokens)
+void	expand_variables(t_shell *shell, t_token *tokens)
 {
     t_token	*current;
     char	*expanded;
@@ -71,22 +59,26 @@ void	expand_variables(t_token *tokens)
     current = tokens;
     while (current)
     {
-        if (current->value)
+        if (current->type == T_WORD && current->value)
         {
-            expanded = remove_quotes_from_token(current->value);
-			if (!expanded)
-			{
-				current = current->next;
-				continue;
-			}
-            free(current->value);
-            current->value = expanded;
+            // Solo expande si es necesario
+            if (requires_expansion(current->value))
+            {
+                expanded = expand_string(shell, current->value);
+                if (expanded)
+                {
+                    free(current->value);
+                    current->value = expanded;
+                }
+                // ✅ Si expand_string falla, mantenemos el valor original
+                // (no es un error crítico, solo no se expande)
+            }
         }
         current = current->next;
     }
 }
 
-char	*expand_string(char *str)
+char	*expand_string(t_shell *shell, char *str)
 {
     int		i;
     char	*result;
@@ -95,25 +87,27 @@ char	*expand_string(char *str)
 
     if (!str || !str[0])
         return (ft_strdup(""));
+    
     i = 0;
     result = ft_strdup("");
     if (!result)
         return (NULL);
+    
     while (str[i])
     {
-        part = process_char_in_expansion(g_shell, str, &i);
+        part = process_char_in_expansion(shell, str, &i);
         if (!part)
-        {
-            free(result);
-            return (NULL);
-        }
+            continue;
+        
         new_result = ft_strjoin(result, part);
         free(part);
+        
         if (!new_result)
         {
             free(result);
             return (NULL);
         }
+        
         free(result);
         result = new_result;
     }

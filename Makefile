@@ -6,7 +6,7 @@
 #    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/11/26 11:19:36 by gguardam         ###   ########.fr        #
+#    Updated: 2025/11/18 18:28:16 by gguardam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,4 +87,64 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+# AddressSanitizer (muy rápido y efectivo)
+asan: CFLAGS += -g -fsanitize=address -fno-omit-frame-pointer
+asan: LDFLAGS += -fsanitize=address
+asan: re
+	@echo "Compiled with AddressSanitizer"
+
+# LeakSanitizer (solo detecta leaks, más rápido que Valgrind)
+lsan: CFLAGS += -g -fsanitize=leak -fno-omit-frame-pointer
+lsan: LDFLAGS += -fsanitize=leak
+lsan: re
+	@echo "Compiled with LeakSanitizer"
+
+# UndefinedBehaviorSanitizer (detecta comportamiento indefinido)
+ubsan: CFLAGS += -g -fsanitize=undefined -fno-omit-frame-pointer
+ubsan: LDFLAGS += -fsanitize=undefined
+ubsan: re
+	@echo "Compiled with UndefinedBehaviorSanitizer"
+
+# Todos los sanitizers juntos
+sanitize: CFLAGS += -g -fsanitize=address,undefined,leak -fno-omit-frame-pointer
+sanitize: LDFLAGS += -fsanitize=address,undefined,leak
+sanitize: re
+	@echo "Compiled with all sanitizers"
+
+# Debug build con símbolos
+debug: CFLAGS += -g3 -O0
+debug: re
+	@echo "Compiled in debug mode"
+
+# Valgrind helper (con supresiones de readline)
+valgrind: debug
+	@if [ -f "readline_leaks.supp" ]; then \
+		echo "Run with: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline_leaks.supp ./minishell"; \
+	else \
+		echo "Run with: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./minishell"; \
+		echo "⚠️  Considera crear readline_leaks.supp para suprimir leaks de readline"; \
+	fi
+
+# Ejecutar todas las herramientas de detección de memory leaks (completo)
+check-memory:
+	@./check_memory.sh
+
+# Análisis rápido de memory leaks
+check:
+	@echo "🔍 Análisis rápido de memory leaks..."
+	@echo ""
+	@echo "1️⃣ AddressSanitizer:"
+	@make asan > /dev/null 2>&1 && ASAN_OPTIONS=detect_leaks=1 timeout 3 ./minishell <<< "echo test" 2>&1 | grep -E "(leak|ERROR SUMMARY)" | head -5 || echo "  (sin errores detectados)"
+	@echo ""
+	@echo "2️⃣ Valgrind (resumen):"
+	@make debug > /dev/null 2>&1
+	@if [ -f "readline_leaks.supp" ]; then \
+		valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline_leaks.supp --quiet ./minishell <<< "echo test" 2>&1 | grep -E "(definitely|indirectly|possibly|still reachable|ERROR SUMMARY)" | head -5 || echo "  (sin leaks detectados)"; \
+	else \
+		valgrind --leak-check=full --show-leak-kinds=all --quiet ./minishell <<< "echo test" 2>&1 | grep -E "(definitely|indirectly|possibly|still reachable|ERROR SUMMARY)" | head -5 || echo "  (sin leaks detectados)"; \
+	fi
+	@echo ""
+	@echo "✅ Análisis completado"
+	@echo "💡 Para ver el reporte completo: make check-memory"
+
+.PHONY: all clean fclean re asan lsan ubsan sanitize debug valgrind check-memory check

@@ -44,37 +44,7 @@ int	write_error_message(int fd, char *cmd, char *arg, char *error_msg)
 void	null_input(void)
 {
     printf("exit\n");
-    
-    // ✅ LIBERA TODO ANTES DE SALIR
-    if (g_shell)
-    {
-        // Libera el prompt actual
-        if (g_shell->prompt)
-        {
-            free(g_shell->prompt);
-            g_shell->prompt = NULL;
-        }
-        
-        // Libera tokens del último comando
-        if (g_shell->tokens)
-        {
-            free_tokens(&g_shell->tokens);
-            g_shell->tokens = NULL;
-        }
-        
-        // Libera commands del último comando
-        if (g_shell->commands)
-        {
-            free_commands(&g_shell->commands);
-            g_shell->commands = NULL;
-        }
-        
-        // ✅ Llama a cleanup_shell para liberar local_vars también
-        cleanup_shell(g_shell);
-    }
-    
-    // ✅ Libera readline history
+    cleanup_shell(g_shell);
     rl_clear_history();
-    
     exit(0);
 }

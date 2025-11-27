@@ -1,0 +1,17 @@
+commands_built
+en.subject.pdf
+execute
+libft.h
+main.c
+main.o
+Makefile
+minishell
+minishell.h
+parser
+readline_leaks.supp
+signals
+sup.txt
+user_route
+utils
+z.txt
+zzchris.txt

@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/06 12:38:04 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/27 17:45:37 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/06 13:06:06 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ char	*extract_metachar(char *input, int *i)
 
 void	handle_quotes_in_token(char *input, int *i, char *quote)
 {
-    if (!*quote && (input[*i] == '\'' || input[*i] == '"'))
-    {
-        *quote = input[*i];
-        return ;
-    }
-    else if (*quote && input[*i] == *quote)
-    {
-        *quote = 0;
-        return ;
-    }
+	if (!*quote && (input[*i] == '\'' || input[*i] == '"'))
+	{
+		*quote = input[*i];
+		return ;
+	}
+	else if (*quote && input[*i] == *quote)
+	{
+		*quote = 0;
+		return ;
+	}
 }
