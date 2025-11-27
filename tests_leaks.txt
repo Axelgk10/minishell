@@ -1,0 +1,122 @@
+~/Proyectos/Minishell/utils$ cdc 
+cdc: command not found
+==3140360== 
+==3140360== HEAP SUMMARY:
+==3140360==     in use at exit: 208,309 bytes in 225 blocks
+==3140360==   total heap usage: 711 allocs, 488 frees, 322,064 bytes allocated
+==3140360== 
+==3140360== LEAK SUMMARY:
+==3140360==    definitely lost: 0 bytes in 0 blocks
+==3140360==    indirectly lost: 0 bytes in 0 blocks
+==3140360==      possibly lost: 0 bytes in 0 blocks
+==3140360==    still reachable: 56,237 bytes in 186 blocks
+==3140360==         suppressed: 152,072 bytes in 39 blocks
+==3140360== Reachable blocks (those to which a pointer was found) are not shown.
+==3140360== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==3140360== 
+==3140360== For lists of detected and suppressed errors, rerun with: -s
+==3140360== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+~/Proyectos/Minishell$ echo hola > testing.txt
+==3140619== Invalid read of size 8
+==3140619==    at 0x406315: process_all_tokens (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x406275: parse_tokens (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x40171E: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==  Address 0x10 is not stack'd, malloc'd or (recently) free'd
+==3140619== 
+==3140619== 
+==3140619== Process terminating with default action of signal 11 (SIGSEGV)
+==3140619==  Access not within mapped region at address 0x10
+==3140619==    at 0x406315: process_all_tokens (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x406275: parse_tokens (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x40171E: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==  If you believe this happened as a result of a stack
+==3140619==  overflow in your program's main thread (unlikely but
+==3140619==  possible), you can try to increase the size of the
+==3140619==  main thread stack using the --main-stacksize= flag.
+==3140619==  The main thread stack size used in this run was 8388608.
+==3140619== 
+==3140619== HEAP SUMMARY:
+==3140619==     in use at exit: 219,760 bytes in 389 blocks
+==3140619==   total heap usage: 1,144 allocs, 757 frees, 357,920 bytes allocated
+==3140619== 
+==3140619== 10 bytes in 1 blocks are definitely lost in loss record 8 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x404E36: extract_var_name (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x404241: add_or_append (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4040CB: export_variables (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x403372: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== 10 bytes in 1 blocks are definitely lost in loss record 9 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x404E36: extract_var_name (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x404321: process_export_arg (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4040F0: export_variables (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x403372: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== 11 bytes in 1 blocks are definitely lost in loss record 11 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x404E36: extract_var_name (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x402A85: inspect_local_vars (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x402989: set_local_var (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4033E8: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== 15 bytes in 1 blocks are definitely lost in loss record 19 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x404C03: create_var_with_value (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x404DA7: add_or_modify_var (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4043F2: process_export_arg (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4040F0: export_variables (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x403372: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== 24 bytes in 1 blocks are possibly lost in loss record 34 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x49E800E: tsearch (tsearch.c:337)
+==3140619==    by 0x490D06A: __add_to_environ (setenv.c:233)
+==3140619==    by 0x48543FF: setenv (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x401C54: change_directory (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x40322B: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== 42 bytes in 1 blocks are possibly lost in loss record 41 of 120
+==3140619==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x490D03F: __add_to_environ (setenv.c:217)
+==3140619==    by 0x48543FF: setenv (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3140619==    by 0x401C54: change_directory (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x40322B: execute_builtin (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4017B8: evaluate_struct (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x401741: process_input (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619==    by 0x4015B9: main (in /home/gguardam/Proyectos/Minishell/minishell)
+==3140619== 
+==3140619== LEAK SUMMARY:
+==3140619==    definitely lost: 46 bytes in 4 blocks
+==3140619==    indirectly lost: 0 bytes in 0 blocks
+==3140619==      possibly lost: 66 bytes in 2 blocks
+==3140619==    still reachable: 66,200 bytes in 255 blocks
+==3140619==         suppressed: 153,448 bytes in 128 blocks
+==3140619== Reachable blocks (those to which a pointer was found) are not shown.
+==3140619== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==3140619== 
+==3140619== For lists of detected and suppressed errors, rerun with: -s
+==3140619== ERROR SUMMARY: 9 errors from 9 contexts (suppressed: 1 from 1)
+zsh: segmentation fault (core dumped)  valgrind --suppressions=readline_leaks.supp --leak-check=full ./minishell
+
+--------------------------------------------------------------------------------------------------------------------------------------------

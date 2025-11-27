@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
+#    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/10/04 09:22:25 by axgimene          #+#    #+#              #
-#    Updated: 2025/11/12 12:11:33 by axgimene         ###   ########.fr        #
+#    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
+#    Updated: 2025/11/26 11:19:36 by gguardam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,62 +14,76 @@ NAME = minishell
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-INCLUDES = -Iincludes -Ilibft
-READLINE_FLAGS = -lreadline
 
-SRC_DIR = src
-OBJ_DIR = obj
+SOURCES = main.c \
+			user_route/dir_manager.c \
+			commands_built/ft_echo.c \
+			commands_built/ft_env.c \
+			commands_built/ft_cd.c \
+			commands_built/ft_pwd.c \
+			commands_built/ft_exit.c \
+			commands_built/ft_export.c \
+			commands_built/ft_local_var.c \
+			execute/execution_utils.c \
+			execute/execution_single_command.c \
+			execute/execution_piped.c \
+			execute/execution_piped_utils.c \
+			utils/main_utils.c \
+			utils/envs.c \
+			utils/envs_utils.c \
+			utils/export_utils.c \
+			utils/errors.c \
+			utils/struct_utils.c \
+			signals/signals.c \
+			parser/parser_tokenizer0.c \
+			parser/parser_tokenizer_utils1.c \
+			parser/parser_builtins2.c \
+			parser/parser_parser_args2.c \
+			parser/parser_redirections_Chicken.c \
+			parser/parser_redirections_little_chickens3.c \
+			parser/parser_parser_main4.c \
+			parser/parser_parser_init5.c \
+			parser/parser_expander6.c \
+			parser/parser_expander_utils7.c \
+			parser/free_clean8.c \
+			parser/message_error_main.c \
+			parser/expander_chicken.c \
+			parser/chicken_token.c \
 
-SRC = src/main.c \
-	src/chicken_token.c \
-	src/parser_tokenizer0.c \
-	src/parser_tokenizer_utils1.c \
-	src/parser_builtins2.c \
-	src/parser_parser_args2.c \
-	src/parser_redirections_little_chickens3.c \
-	src/parser_redirections_Chicken.c \
-	src/message_error_main.c \
-	src/parser_parser_main4.c \
-	src/parser_parser_init5.c \
-	src/parser_expander6.c \
-	src/parser_expander_utils7.c \
-	src/expander_chicken.c \
-	src/free_clean8.c \
-	src/executor.c
+OBJECTS = $(SOURCES:.c=.o)
 
-OBJ = $(SRC:.c=.o)
-OBJ := $(OBJ:src/%=obj/%)
+INCLUDES = -I. -I./libft
+HEADERS = minishell.h
 
-LIBFT_DIR = libft
+LIBS = -lreadline
+LIBFT_DIR = libft.h
 LIBFT = $(LIBFT_DIR)/libft.a
-
-# ============================================================================
-# REGLAS
-# ============================================================================
+LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
 
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ) $(LIBFT) $(READLINE_FLAGS) -o $(NAME)
-	@echo "✓ Compilacion completada: $(NAME)"
-
-obj/%.o: src/%.c
-	@mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@echo "✓ Compilado: $<"
-
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	@echo "Compiling libft..."
+	@make -C $(LIBFT_DIR)
+
+$(NAME): $(OBJECTS) $(LIBFT)
+	@echo "Linking $(NAME)..."
+	$(CC) $(OBJECTS) $(LIBFT_FLAGS) $(LIBS) $(LDFLAGS) -o $(NAME)
+	@echo "$(NAME) compiled successfully!"
+
+%.o: %.c $(HEADERS)
+	@echo "Compiling $<..."
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	@echo "✓ Limpieza completada"
+	@echo "Cleaning object files..."
+	rm -f $(OBJECTS)
+	@make -C $(LIBFT_DIR) clean
 
 fclean: clean
+	@echo "Cleaning executables..."
 	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	@echo "✓ Limpieza total completada"
+	@make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

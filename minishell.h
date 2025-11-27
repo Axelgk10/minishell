@@ -1,34 +1,22 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/04 09:21:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/11 15:22:03 by axgimene         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
-# define MINISHELL_H
+#	define MINISHELL_H
 
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <signal.h>
-# include <sys/wait.h>
-# include <sys/stat.h>
-# include <dirent.h>
-# include <termios.h>
-# include <fcntl.h>
-# include <errno.h>
-# include "./libft/libft.h"
+#define _POSIX_C_SOURCE 200809L //?
 
-// Global variable for signals (as required)
-extern volatile sig_atomic_t	g_signal;
+# include <sys/stat.h> //Ax
+# include <dirent.h> //Ax
+# include <termios.h> //Ax
+# include <fcntl.h> //Ax
+# include <errno.h> //Ax
+#include <stdio.h> //Printf
+#include <stdlib.h> //Free Malloc
+#include <readline/readline.h> //Readline
+#include <readline/history.h> //AddHistory
+#include <unistd.h> //getcwd
+#include <sys/types.h> //PID type
+#include <sys/wait.h> //wait functions
+#include <signal.h> //Sigaction
+#include "libft.h/libft.h"
 
 // Token types
 typedef enum e_token_type
@@ -42,34 +30,6 @@ typedef enum e_token_type
 	T_EOF
 }	t_token_type;
 
-// typedef	struct s_token
-// {
-// 	char	*str;
-// 	int		type;
-// }	t_token;
-
-// typedef	struct s_cmd
-// {
-// 	char	*argv;
-// 	int		infile;
-// 	int		outfile;
-// }	t_cmd;
-
-// t_token *tkn = malloc(1 * sizeof(t_token));
-
-// ft_lstnew(tkn);
-// ft_lstnew(cmd);
-
-// (t_token *) lst_tkn.content;
-// (t_cmd	*)	lst_cmd.content;
-
-// typedef struct s_list
-// {
-// 	void	*content;
-// 	t_list	*next;
-// }	t_list;
-
-
 // Token structure
 typedef struct s_token
 {
@@ -82,6 +42,7 @@ typedef struct s_token
 typedef struct s_cmd
 {
 	char			**av;
+	int				ac;
 	int				in_fd;
 	int				out_fd;
 	int				pipe[2];
@@ -92,25 +53,92 @@ typedef struct s_cmd
 // Main shell structure
 typedef struct s_shell
 {
-	t_token		*tokens;
-	t_cmd		*commands;
-	char		**env;
-	int			exit_status;
-	int			stdin_copy;
-	int			stdout_copy;
+    t_token		*tokens;
+    t_cmd		*commands;
+    char		**env;
+    char		**local_vars;
+    char		*prompt; // ✅ AÑADE ESTA LÍNEA
+    int			exit_status;
+    int			stdin_copy;
+    int			stdout_copy;
 }	t_shell;
 
-// Function prototypes
-// Main
-void	init_shell(t_shell *shell, char **env);
-void	cleanup_shell(t_shell *shell);
+extern int g_exit_status;
 
+//dir_manager
+int		change_directory(char *path);
+char	*format_cwd(char *cwd);
+char	*get_home_shortcut(char *cwd);  // ✅ AÑADE ESTA LÍNEA
+
+//commands
+int		ft_echo(t_cmd *command);
+int		ft_env(t_shell *shell);
+int		ft_pwd(t_cmd *command);
+void	update_envs(t_shell *shell);
+void	manage_exit(t_shell *shell);
+void	ft_export_env(t_shell *shell);
+
+//execution
+void	just_execute_it_man(t_shell *shell);
+void	execute_builtin(t_shell *shell);
+//void	execute_pipeline(t_shell *shell);
+int		execute_pipeline(t_shell *shell, t_cmd *commands);
+
+//execution utils
+void	status_wait(pid_t pid, int status);
+void	fd_checker(t_shell *shell);
+int		create_pipe_if_needed(t_cmd *current, int *pipe_fd);
+void	fd_redirections(int prev_fd, t_cmd	*current, int *pipe_fd);
+void	wait_for_childs(t_shell *shell);
+char	*find_binary(char *command, char **paths);
+int		got_path(t_shell *shell);
+
+//Utils main
+void	null_input(void);  // ✅ Sin parámetros
+void	init_signals(void);
+int	check_unclosed_quotes(char *input);
+
+//Utils Errors
+void	error_executing\
+(int site_of_error, char **env, char **cmd_params);
+int	write_error_message(int fd, char *cmd, char *arg, char *msg);
+
+//Utils Envs
+int		export_variables(t_shell *shell);
+int		unset_variables(t_shell *shell);
+char	**get_path_values(char **env, const char *var_name);
+int		is_valid_var_name(char *name);
+int		find_variable_index(char **env_var, char *var_name, int name_len);
+int		count_env_vars(char **env_var);
+void	del_var(t_shell *shell);
+int		free_memory(char *modified_arg, char *var_name, char *var_value);
+int		set_local_var(t_shell *shell);
+
+//Utils Export
+//char	*create_var_without_value(char *var_assignment, int *name_len);
+char	*create_var_with_value(char *var_assignment, char *equals_pos, char **var_name, int *name_len);
+void	update_env_array(char **env_var, char *new_var, char *var_name, int name_len);
+void	add_or_modify_var(char **env_var, char *var_assignment);
+char	*extract_var_name(char *var_assignment, char *equals_pos);
+char	*extract_var_value(char *var_assignment);
+
+//signals
+void	sigint_handler(int sig);
+
+//Struct Utils
+void	init_shell(t_shell *shell, char **envp);
+void	cleanup_command_fds(t_cmd *cmd);
+void	cleanup_shell(t_shell *shell);
+void	check_struct(t_shell *shell);
+
+// Parser Functions
 // Parser tokenizer
-int	is_metachar(char c);
+int		is_metachar(char c);
 t_token_type	get_token_type(char *str);
 t_token	*tokenize(char *input);
-t_cmd	*parse_tokens(t_token **tokens);
-void	expand_variables(t_shell *shell, t_token *tokens);
+int		check_unclosed_quotes(char *input);
+t_cmd	*parse_tokens(t_token *tokens);
+void	expand_variables(t_token *tokens);  // ✅ Sin shell
 char	*expand_string(t_shell *shell, char *str);
 char	*handle_single_quotes(char *str, int *i);
 char	*handle_double_quotes(t_shell *shell, char *str, int *i);
@@ -137,21 +165,6 @@ int		setup_pipe_fds(t_cmd *current_cmd, t_cmd *new_cmd);
 int		handle_pipe_token(t_token **current_token, t_cmd **current_cmd);
 int		validate_final_command(t_cmd *current_cmd);
 
-// Execution functions
-int	execute_commands(t_shell *shell);
-int	execute_single_command(t_shell *shell, t_cmd *cmd);
-int	execute_pipeline(t_shell *shell, t_cmd *commands);
-int	execute_builtin(t_shell *shell, t_cmd *cmd);
-
-// Builtins
-int	builtin_echo(t_cmd *cmd);
-int	builtin_pwd(void);
-int	builtin_env(t_shell *shell);
-int	builtin_cd(t_shell *shell, t_cmd *cmd);
-int	builtin_exit(t_shell *shell, t_cmd *cmd);
-int	builtin_export(t_shell *shell, t_cmd *cmd);
-int	builtin_unset(t_shell *shell, t_cmd *cmd);
-
 // Signals
 void	setup_signals(void);
 void	handle_sigint(int sig);
@@ -163,5 +176,9 @@ void	free_tokens(t_token **tokens);
 void	free_commands(t_cmd **commands);
 char	**copy_env(char **env);
 void	print_error(char *cmd, char *msg);
+
+// Cleanup functions
+void	cleanup_shell(t_shell *shell);
+void	free_shell_after_execution(t_shell *shell);  // ✅ AÑADE AQUÍ
 
 #endif
