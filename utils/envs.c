@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envs.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:33 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/18 18:31:34 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:39:22 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	add_or_append(t_shell *shell, int i)
 	int		flag;
 	char	*var_name;
 	char	*equal_pos;
+	int		result;
 
 	j = 0;
 	flag = 0;
@@ -35,9 +36,12 @@ static int	add_or_append(t_shell *shell, int i)
 	if(ft_strchr(var_name, '+'))
 		var_name[ft_strlen(var_name) - 1] = '\0';
 	if(find_variable_index(shell->env, var_name, ft_strlen(var_name)) != -1)
-		return (flag);
+		result = flag;
 	else
-		return (0);
+		result = 0;
+	if (var_name != shell->commands->av[i])
+		free(var_name);
+	return (result);
 }
 
 static int	process_export_arg(t_shell *shell, char *arg)
@@ -60,6 +64,7 @@ static int	process_export_arg(t_shell *shell, char *arg)
 			var_name[ft_strlen(var_name)] = '\0';
 			var_value = extract_var_value(arg);
 			new_var = ft_strjoin(var_name, var_value);
+			free(var_value);
 		}
 	}
 	if(is_valid_var_name(var_name) || is_valid_var_name(arg))
@@ -68,10 +73,14 @@ static int	process_export_arg(t_shell *shell, char *arg)
 			add_or_modify_var(shell->env, new_var);
 		else
 			add_or_modify_var(shell->env, arg);
+		if (var_name && var_name != arg)
+			free(var_name);
 		return (0);
 	}
-	if (var_name != arg)
+	if (var_name && var_name != arg)
 		free(var_name);
+	if (new_var)
+		free(new_var);
 	return (write_error_message(shell->commands->out_fd, "export", arg, \
 "not a valid identifier"));
 }
@@ -124,6 +133,7 @@ static int	append_arg(t_shell *shell, char *arg)
 		free(mod_env_name);
 		return (1);
 	}
+	free(shell->env[i]);
 	shell->env[i] = mod_env;
 	free(mod_env_name);
 	return (0);

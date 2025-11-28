@@ -78,15 +78,24 @@ static void	setup_child_output(t_cmd *cmd, int *pipe_fd)
 	}
 }
 
-static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, int *pipe_fd)
+static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, int *pipe_fd, pid_t *pids)
 {
 	char	**path_env;
 	char	*bin_path;
 
 	setup_child_input(prev_pipe_out, cmd);
 	setup_child_output(cmd, pipe_fd);
+	if (!cmd->av || !cmd->av[0] || cmd->av[0][0] == '\0')
+	{
+		write_error_message(STDERR_FILENO, "", "", "command not found");
+		free(pids);
+		exit(127);
+	}
 	if (cmd->is_builtin)
+	{
+		free(pids);
 		exit(execute_builtin_in_pipeline(shell, cmd));
+	}
 	path_env = get_path_values(shell->env, "PATH");
 	bin_path = find_binary(cmd->av[0], path_env);
 	if (!bin_path)
@@ -105,6 +114,7 @@ static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, 
 		while(path_env && path_env[i])
 			free(path_env[i++]);
 		free(path_env);
+		free(pids);
 		exit(127);
 	}
 	if (execve(bin_path, cmd->av, shell->env) == -1)
@@ -145,7 +155,7 @@ static void	handle_parent_cleanup(int *prev_pipe_out, t_cmd *current, int *pipe_
 	}
 }
 
-static int	fork_and_execute(t_shell *shell, t_cmd *current, int prev_pipe_out, int *pipe_fd)
+static int	fork_and_execute(t_shell *shell, t_cmd *current, int prev_pipe_out, int *pipe_fd, pid_t *pids)
 {
 	pid_t	pid;
 
@@ -156,7 +166,7 @@ static int	fork_and_execute(t_shell *shell, t_cmd *current, int prev_pipe_out, i
 		return (-1);
 	}
 	if (pid == 0)
-		execute_child_process(shell, current, prev_pipe_out, pipe_fd);
+		execute_child_process(shell, current, prev_pipe_out, pipe_fd, pids);
 	return (pid);
 }
 
@@ -189,6 +199,20 @@ static int	wait_all_processes(pid_t *pids, int count, t_shell *shell)
 	return (shell->exit_status);
 }
 
+static int	has_valid_commands(t_cmd *commands)
+{
+	t_cmd	*current;
+
+	current = commands;
+	while (current)
+	{
+		if (!current->av || !current->av[0] || current->av[0][0] == '\0')
+			return (0);
+		current = current->next;
+	}
+	return (1);
+}
+
 int	execute_pipeline(t_shell *shell, t_cmd *commands)
 {
 	t_cmd	*current;
@@ -199,6 +223,8 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
 	int		prev_pipe_out;
 
 	if (!shell || !commands)
+		return (1);
+	if (!has_valid_commands(commands))
 		return (1);
 	count = count_commands(commands);
 	pids = malloc(sizeof(pid_t) * count);
@@ -215,7 +241,7 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
 			cleanup_pipeline(pids);
 			return (1);
 		}
-		pids[i] = fork_and_execute(shell, current, prev_pipe_out, pipe_fd);
+		pids[i] = fork_and_execute(shell, current, prev_pipe_out, pipe_fd, pids);
 		if (pids[i] == -1)
 		{
 			if (prev_pipe_out > 2)

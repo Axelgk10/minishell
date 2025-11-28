@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envs_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:25 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/10 19:15:38 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:28:06 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	del_var(t_shell *shell)
 	int		i;
 	int		var_name_len;
 	char	*var_to_delete;
+	char	*temp;
 
 	if (!shell || !shell->commands || !shell->commands->av[1])
 		return ;
@@ -90,12 +91,14 @@ void	del_var(t_shell *shell)
 		if (ft_strncmp(shell->env[i], var_to_delete, var_name_len) == 0 \
 && (shell->env[i][var_name_len] == '=' || shell->env[i][var_name_len] == '\0'))
 		{
+			temp = shell->env[i];
 			while (shell->env[i + 1])
 			{
 				shell->env[i] = shell->env[i + 1];
 				i++;
 			}
 			shell->env[i] = NULL;
+			free(temp);
 			break ;
 		}
 		i++;

@@ -81,9 +81,18 @@ void	free_shell_after_execution(t_shell *shell)
     }
 }
 
+static int	is_empty_command(t_cmd *cmd)
+{
+    if (!cmd || !cmd->av || !cmd->av[0] || cmd->av[0][0] == '\0')
+        return (1);
+    return (0);
+}
+
 static void	evaluate_struct(t_shell *shell)
 {
     if (!shell || !shell->commands)
+        return ;
+    if (is_empty_command(shell->commands))
         return ;
     if (!shell->commands->next)
     {

@@ -39,8 +39,8 @@ char **var_name, int *name_len)
 void	update_env_array(char **env_var, char *new_var, char *var_name, \
 int name_len)
 {
-	int	var_index;
-	int	env_count;
+	int		var_index;
+	int		env_count;
 
 	var_index = find_variable_index(env_var, var_name, name_len);
 	if (var_index != -1)
@@ -50,6 +50,8 @@ int name_len)
 		return ;
 	}
 	env_count = count_env_vars(env_var);
+	// ✅ El array fue asignado con espacio extra en init_shell (+ 100 slots)
+	// por lo que es seguro escribir en env_count y env_count + 1
 	env_var[env_count] = new_var;
 	env_var[env_count + 1] = NULL;
 }

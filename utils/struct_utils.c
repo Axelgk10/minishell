@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:43 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/24 20:17:03 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:40:44 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	init_shell(t_shell *shell, char **envp)
     while (envp && envp[env_count])
         env_count++;
     
-    shell->env = malloc((env_count + 1) * sizeof(char *));
+    // ✅ Asignar espacio extra para nuevas variables (+ 100 slots)
+    shell->env = malloc((env_count + 101) * sizeof(char *));
     if (!shell->env)
     {
         ft_putstr_fd("Error: malloc failed\n", STDERR_FILENO);
@@ -78,28 +79,17 @@ void	cleanup_shell(t_shell *shell)
         return ;
     
     // Liberar environment (copiado en init_shell)
-    if (shell->env && shell->env_count > 0)
+    if (shell->env)
     {
         i = 0;
-        // ✅ Liberar todos los strings en el array
-        // El array tiene indices 0 a env_count-1 con strings
-        // E índice env_count tiene NULL
-        while (i < shell->env_count)
+        // ✅ Liberar todos los strings hasta encontrar NULL
+        while (shell->env[i])
         {
-            if (shell->env[i])
-            {
-                free(shell->env[i]);
-                shell->env[i] = NULL;
-            }
+            free(shell->env[i]);
+            shell->env[i] = NULL;
             i++;
         }
         // ✅ Liberar el array mismo (que contiene los punteros)
-        free(shell->env);
-        shell->env = NULL;
-    }
-    else if (shell->env)
-    {
-        // If env_count is 0 but env is allocated, free it anyway
         free(shell->env);
         shell->env = NULL;
     }
