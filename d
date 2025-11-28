@@ -1,6 +1,11 @@
+a
+b
+c
 commands_built
-en.subject.pdf
+d
 execute
+f
+LEEME_PRIMERO.txt
 libft.h
 main.c
 main.o
@@ -10,8 +15,6 @@ minishell.h
 parser
 readline_leaks.supp
 signals
-sup.txt
+sup.supp
 user_route
 utils
-z.txt
-zzchris.txt

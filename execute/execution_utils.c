@@ -31,6 +31,9 @@ char	*find_binary(char *command, char **paths)
 	char	*full_path;
 	int		i;
 
+	//Parche rapido para ruta absoluta
+	if (access(command, X_OK) == 0)
+		return (command);
 	if (!command || !paths)
 		return (NULL);
 	i = 0;
