@@ -164,6 +164,10 @@ static void	process_input(t_shell	*shell, char *input)
         {
             evaluate_struct(shell);
         }
+        else
+        {
+            shell->exit_status = 2;
+        }
     }
     
     // Libera después de ejecutar

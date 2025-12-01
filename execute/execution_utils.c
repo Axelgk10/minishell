@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+extern t_shell *g_shell;
+
 void	fd_checker(t_shell *shell)
 {
 	if (shell->commands->out_fd != STDOUT_FILENO && shell->commands->out_fd > 0)
@@ -23,6 +25,8 @@ void	status_wait(pid_t pid, int status)
 		g_exit_status = 128 + WTERMSIG(status);
 	else
 		g_exit_status = 1;
+	if (g_shell)
+		g_shell->exit_status = g_exit_status;
 }
 
 char	*find_binary(char *command, char **paths)

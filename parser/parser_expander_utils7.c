@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/24 19:35:03 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/01 13:25:26 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*process_char_in_expansion(t_shell *shell, char *str, int *i)
         return (handle_regular_char(str, i));
 }
 
-// ✅ FUNCIÓN HELPER PARA DETECTAR SI HAY EXPANSIÓN
+// ✅ FUNCIÓN HELPER PARA DETECTAR SI HAY EXPANSIÓN O COMILLAS
 static int	requires_expansion(char *str)
 {
     int	i;
@@ -45,6 +45,8 @@ static int	requires_expansion(char *str)
     while (str[i])
     {
         if (str[i] == '$' && str[i + 1] && !is_dollar_terminator(str[i + 1]))
+            return (1);
+        if (str[i] == '\'' || str[i] == '"')
             return (1);
         i++;
     }
