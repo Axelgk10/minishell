@@ -141,8 +141,15 @@ int		check_unclosed_quotes(char *input);
 t_cmd	*parse_tokens(t_token *tokens);
 void	expand_variables(t_shell *shell, t_token *tokens);
 char	*expand_string(t_shell *shell, char *str);
+char	*join_and_free(char *result, char *part);
+void	print_redir_error(t_token *filename_token);
 char	*handle_single_quotes(char *str, int *i);
 char	*handle_double_quotes(t_shell *shell, char *str, int *i);
+char	*process_double_quote_content(t_shell *shell, char *str, int *i);
+char	*handle_single_quote_in_double(char *result, int *i);
+char	*handle_dollar_in_double(t_shell *shell, char *result,
+			char *str, int *i);
+char	*handle_regular_in_double(char *result, char *str, int *i);
 char	*extract_word(char *input, int *i);
 char	*extract_metachar(char *input, int *i);
 int		handle_redirection(t_token **tokens, t_cmd *cmd);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
+#    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/11/18 18:28:16 by gguardam         ###   ########.fr        #
+#    Updated: 2025/12/03 13:34:11 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,8 @@ SOURCES = main.c \
 			parser/free_clean8.c \
 			parser/message_error_main.c \
 			parser/expander_chicken.c \
+			parser/expander_double_quotes.c \
+			parser/expander_helpers.c \
 			parser/chicken_token.c \
 
 OBJECTS = $(SOURCES:.c=.o)

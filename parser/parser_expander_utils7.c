@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/01 13:25:26 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/03 13:33:55 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,36 +82,24 @@ void	expand_variables(t_shell *shell, t_token *tokens)
 
 char	*expand_string(t_shell *shell, char *str)
 {
-    int		i;
-    char	*result;
-    char	*part;
-    char	*new_result;
+	int		i;
+	char	*result;
+	char	*part;
 
-    if (!str || !str[0])
-        return (ft_strdup(""));
-    
-    i = 0;
-    result = ft_strdup("");
-    if (!result)
-        return (NULL);
-    
-    while (str[i])
-    {
-        part = process_char_in_expansion(shell, str, &i);
-        if (!part)
-            continue;
-        
-        new_result = ft_strjoin(result, part);
-        free(part);
-        
-        if (!new_result)
-        {
-            free(result);
-            return (NULL);
-        }
-        
-        free(result);
-        result = new_result;
-    }
-    return (result);
+	if (!str || !str[0])
+		return (ft_strdup(""));
+	i = 0;
+	result = ft_strdup("");
+	if (!result)
+		return (NULL);
+	while (str[i])
+	{
+		part = process_char_in_expansion(shell, str, &i);
+		if (!part)
+			continue ;
+		result = join_and_free(result, part);
+		if (!result)
+			return (NULL);
+	}
+	return (result);
 }
