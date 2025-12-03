@@ -1,0 +1,258 @@
+# Archivo de supresión de Valgrind para leaks de readline
+# Uso: valgrind --suppressions=readline_leaks.supp --leak-check=full ./minishell
+#
+# Estos leaks son conocidos de la librería readline y no son bugs de tu código.
+# Readline mantiene memoria interna que no libera intencionalmente.
+
+# Leaks de inicialización de readline
+{
+   readline_init_keymap
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_make_bare_keymap
+   fun:rl_generic_bind
+   fun:rl_parse_and_bind
+   obj:*/libreadline*
+   fun:rl_initialize
+   fun:readline
+}
+
+{
+   readline_init_keymap_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_make_bare_keymap
+   fun:rl_generic_bind
+   fun:rl_bind_keyseq_if_unbound_in_map
+   obj:*/libreadline*
+   fun:rl_initialize
+   fun:readline
+}
+
+{
+   readline_init_terminal
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_make_bare_keymap
+   fun:rl_generic_bind
+   fun:rl_bind_keyseq_if_unbound_in_map
+   obj:*/libreadline*
+   fun:_rl_init_terminal_io
+   fun:rl_initialize
+   fun:readline
+}
+
+# Leaks de history (add_history)
+{
+   readline_history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:alloc_history_entry
+   fun:add_history
+}
+
+{
+   readline_history_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:add_history
+}
+
+{
+   readline_history_replace
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:replace_history_entry
+   fun:readline_internal_teardown
+   fun:readline
+}
+
+# Leaks de prompt expansion
+{
+   readline_prompt_expand
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:xrealloc
+   obj:*/libreadline*
+   fun:rl_expand_prompt
+   fun:rl_set_prompt
+   fun:readline
+}
+
+# Leaks de undo operations
+{
+   readline_undo_delete
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   fun:malloc
+   fun:xmalloc
+   fun:rl_copy_text
+   fun:rl_delete_text
+   fun:_rl_rubout_char
+   fun:_rl_dispatch_subseq
+   fun:readline_internal_char
+   fun:readline
+}
+
+{
+   readline_undo_add
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:xmalloc
+   fun:rl_add_undo
+   fun:rl_delete_text
+   fun:_rl_rubout_char
+   fun:_rl_dispatch_subseq
+   fun:readline_internal_char
+   fun:readline
+}
+
+{
+   readline_undo_insert
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   fun:malloc
+   fun:xmalloc
+   fun:rl_add_undo
+   fun:rl_insert_text
+   fun:_rl_insert_char
+   fun:rl_insert
+   fun:_rl_dispatch_subseq
+   fun:readline_internal_char
+   fun:readline
+}
+
+# Leaks de locale
+{
+   readline_locale
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:_nl_load_locale_from_archive
+   fun:_nl_find_locale
+   fun:setlocale
+   fun:_rl_init_locale
+   fun:_rl_init_eightbit
+   fun:rl_initialize
+   fun:readline
+}
+
+# Leaks de screen size (setenv)
+{
+   readline_screen_size
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:__add_to_environ
+   fun:setenv
+   fun:_rl_get_screen_size
+   obj:*/libreadline*
+   fun:rl_expand_prompt
+   fun:rl_set_prompt
+   fun:readline
+}
+
+{
+   readline_screen_size_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:__add_to_environ
+   fun:setenv
+   fun:sh_set_lines_and_columns
+   fun:_rl_get_screen_size
+   obj:*/libreadline*
+   fun:rl_expand_prompt
+   fun:rl_set_prompt
+   fun:readline
+}
+
+# Leaks de teardown
+{
+   readline_teardown
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:xmalloc
+   fun:readline_internal_teardown
+   fun:readline
+}
+
+# Leaks de termcap/terminfo
+{
+   readline_termcap
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:tgetstr
+   obj:*/libreadline*
+   fun:readline
+}
+
+{
+   readline_termcap_2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*termcap*
+   obj:*/libreadline*
+   fun:readline
+}
+
+# Leaks de ncurses
+{
+   readline_ncurses
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   obj:*/libncurses*
+   obj:*/libreadline*
+}
+
+# Leaks de completion
+{
+   readline_completion
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:rl_*
+   obj:*/libreadline*
+}
+
+# Leaks genéricos de readline (catch-all)
+{
+   readline_generic_alloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*alloc
+   obj:*/libreadline*
+   fun:readline
+}
+
+{
+   readline_generic_dl
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:*dl*
+   obj:*/libreadline*
+   fun:readline
+}
+
+# Leaks de rl_clear_history (si lo usas)
+{
+   readline_clear_history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:rl_clear_history
+}
