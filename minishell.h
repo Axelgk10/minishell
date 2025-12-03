@@ -67,7 +67,7 @@ typedef struct s_shell
 extern int g_exit_status;
 
 //dir_manager
-int		change_directory(char *path);
+int		change_directory(t_shell *shell, char *path);
 char	*format_cwd(char *cwd);
 char	*get_home_shortcut(char *cwd);  // ✅ AÑADE ESTA LÍNEA
 
@@ -132,46 +132,61 @@ void	cleanup_command_fds(t_cmd *cmd);
 void	cleanup_shell(t_shell *shell);
 void	check_struct(t_shell *shell);
 
-// Parser Functions
-// Parser tokenizer
-int		is_metachar(char c);
-t_token_type	get_token_type(char *str);
-t_token	*tokenize(char *input);
-int		check_unclosed_quotes(char *input);
-t_cmd	*parse_tokens(t_token *tokens);
-void	expand_variables(t_shell *shell, t_token *tokens);
-char	*expand_string(t_shell *shell, char *str);
-char	*join_and_free(char *result, char *part);
-void	print_redir_error(t_token *filename_token);
-char	*handle_single_quotes(char *str, int *i);
-char	*handle_double_quotes(t_shell *shell, char *str, int *i);
+// ============================================================================
+// PARSER FUNCTIONS
+// ============================================================================
+// Pipeline: INPUT STRING → [TOKENIZE] → TOKENS → [EXPAND] → [PARSE] → CMDS
+// ============================================================================
+
+// ────────────────────────────────────────────────────────────────────────────
+// TOKENIZACIÓN - Convierte input string en lista de tokens
+// ────────────────────────────────────────────────────────────────────────────
+t_token	*tokenize(char *input);                  // Main: crea lista de tokens
+int		is_metachar(char c);                     // Detecta |, <, >, etc.
+t_token_type	get_token_type(char *str);       // Asigna tipo al token
+char	*extract_word(char *input, int *i);      // Extrae palabra/argumento
+char	*extract_metachar(char *input, int *i);  // Extrae operador (|, <, >)
+void	handle_quotes_in_token(char *input, int *i, char *quote);
+int		check_unclosed_quotes(char *input);      // Valida comillas cerradas
+
+// ────────────────────────────────────────────────────────────────────────────
+// EXPANSIÓN - Procesa variables ($VAR) y elimina comillas
+// ────────────────────────────────────────────────────────────────────────────
+void	expand_variables(t_shell *shell, t_token *tokens); // Main: loop tokens
+char	*expand_string(t_shell *shell, char *str);    // Procesa string completo
+char	*expand_dollar(t_shell *shell, char *str, int *i); // Expande $VAR
+char	*handle_single_quotes(char *str, int *i);     // Procesa 'literal'
+char	*handle_double_quotes(t_shell *shell, char *str, int *i); // Proc "..."
 char	*process_double_quote_content(t_shell *shell, char *str, int *i);
 char	*handle_single_quote_in_double(char *result, int *i);
 char	*handle_dollar_in_double(t_shell *shell, char *result,
-			char *str, int *i);
+			char *str, int *i);                       // Expande $VAR dentro de "..."
 char	*handle_regular_in_double(char *result, char *str, int *i);
-char	*extract_word(char *input, int *i);
-char	*extract_metachar(char *input, int *i);
-int		handle_redirection(t_token **tokens, t_cmd *cmd);
-void	set_builtin_flag(t_cmd *cmd);
-t_cmd	*create_command(void);
-void	add_arg_to_command(t_cmd *cmd, char *arg);
+int		is_dollar_terminator(char c);                 // Detecta fin de $VAR
+char	*join_and_free(char *result, char *part);     // Helper: concatena
+
+// ────────────────────────────────────────────────────────────────────────────
+// PARSING - Convierte tokens en comandos ejecutables
+// ────────────────────────────────────────────────────────────────────────────
+t_cmd	*parse_tokens(t_token *tokens);           // Main: tokens → comandos
+t_cmd	*create_command(void);                    // Inicializa estructura t_cmd
 void	init_first_command(t_cmd **head, t_cmd **current_cmd);
+void	add_arg_to_command(t_cmd *cmd, char *arg); // Agrega argumento a cmd
+void	set_builtin_flag(t_cmd *cmd);             // Marca si es builtin
+int		handle_pipe_token(t_token **current_token, t_cmd **current_cmd);
+int		setup_pipe_fds(t_cmd *current_cmd, t_cmd *new_cmd); // Conecta pipes
 void	handle_pipe_in_parse(t_token **token, t_cmd **cmd);
+int		handle_redirection(t_token **tokens, t_cmd *cmd); // Procesa <, >, >>
+int		handle_input_redirection(char *filename);  // Abre archivo para <
+int		handle_output_redirection(char *filename); // Abre archivo para >
+int		handle_append_redirection(char *filename); // Abre archivo para >>
+int		handle_heredoc(char *delimiter);           // Implementa <<
 void	handle_redir_in_parse(t_token **token, t_cmd **cmd);
-char	*expand_dollar(t_shell *shell, char *str, int *i);
-int		is_dollar_terminator(char c);
-int		handle_append_redirection(char *filename);
-int		handle_output_redirection(char *filename);
-int		handle_input_redirection(char *filename);
-int		handle_heredoc(char *delimiter);
-void	handle_quotes_in_token(char *input, int *i, char *quote);
-void 	free_command_args_and_fds(t_cmd *cmd);
+void	print_redir_error(t_token *filename_token);
 int		is_redirection_token(t_token_type type);
 int		is_valid_redir_sequence(t_token *token);
-int		setup_pipe_fds(t_cmd *current_cmd, t_cmd *new_cmd);
-int		handle_pipe_token(t_token **current_token, t_cmd **current_cmd);
 int		validate_final_command(t_cmd *current_cmd);
+void 	free_command_args_and_fds(t_cmd *cmd);
 
 // Signals
 void	setup_signals(void);

@@ -33,7 +33,7 @@ void	just_execute_it_man(t_shell *shell)
 		while(path_env && path_env[i])
 			free(path_env[i++]);
 		free(path_env);
-		exit(1);
+		_exit(1);
 	}
 	else if (pid == 0)
 	{
@@ -55,16 +55,17 @@ void	just_execute_it_man(t_shell *shell)
 			while(path_env && path_env[i])
 				free(path_env[i++]);
 			free(path_env);
-			exit(127);
+			_exit(127);
 		}
 		if (execve(bin_path, shell->commands->av, shell->env) == -1)
 		{
+			perror("execve");
 			free(bin_path);
 			int i = 0;
 			while(path_env && path_env[i])
 				free(path_env[i++]);
 			free(path_env);
-			error_executing(2, shell->env, shell->commands->av);
+			_exit(126);
 		}
 	}
 	else if (pid > 0)
@@ -82,11 +83,7 @@ void	execute_builtin(t_shell *shell)
     if (!shell || !shell->commands || !shell->commands->av || !shell->commands->av[0])
         return;
     if (!ft_strcmp(shell->commands->av[0], "cd"))
-    {
-        shell->exit_status = change_directory(shell->commands->av[1]);
-        if (shell->exit_status == 0)
-            update_envs(shell);
-    }
+        shell->exit_status = change_directory(shell, shell->commands->av[1]);
     else if (!ft_strcmp(shell->commands->av[0], "pwd"))
         shell->exit_status = ft_pwd(shell->commands);
     else if (!ft_strcmp(shell->commands->av[0], "exit"))

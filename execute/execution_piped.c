@@ -3,12 +3,7 @@
 static int	execute_builtin_cd_pwd_exit(t_shell *shell, t_cmd *cmd)
 {
 	if (!ft_strcmp(cmd->av[0], "cd"))
-	{
-		shell->exit_status = change_directory(cmd->av[1]);
-		if (shell->exit_status == 0)
-			update_envs(shell);
-		return (0);
-	}
+		return (change_directory(shell, cmd->av[1]));
 	if (!ft_strcmp(cmd->av[0], "pwd"))
 		return (ft_pwd(cmd));
 	if (!ft_strcmp(cmd->av[0], "exit"))
@@ -89,12 +84,12 @@ static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, 
 	{
 		write_error_message(STDERR_FILENO, "", "", "command not found");
 		free(pids);
-		exit(127);
+		_exit(127);
 	}
 	if (cmd->is_builtin)
 	{
 		free(pids);
-		exit(execute_builtin_in_pipeline(shell, cmd));
+		_exit(execute_builtin_in_pipeline(shell, cmd));
 	}
 	path_env = get_path_values(shell->env, "PATH");
 	bin_path = find_binary(cmd->av[0], path_env);
@@ -115,18 +110,19 @@ static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, 
 			free(path_env[i++]);
 		free(path_env);
 		free(pids);
-		exit(127);
+		_exit(127);
 	}
 	if (execve(bin_path, cmd->av, shell->env) == -1)
 	{
+		perror("execve");
 		free(bin_path);
 		int i = 0;
 		while(path_env && path_env[i])
 			free(path_env[i++]);
 		free(path_env);
-		error_executing(2, shell->env, cmd->av);
+		_exit(126);
 	}
-	exit(127);
+	_exit(127);
 }
 
 static int	count_commands(t_cmd *commands)

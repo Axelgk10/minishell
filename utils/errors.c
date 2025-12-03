@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:37 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/24 20:23:29 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:00:56 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	error_executing\
     (void)env;
     (void)cmd_params;
     if (site_of_error == 0)
-        exit((perror("command not found"), 127));
+        _exit((perror("command not found"), 127));
     else if (site_of_error == 1)
-        exit((perror("bin not found"), 127));
+        _exit((perror("bin not found"), 127));
     else
-        exit((perror("execve"), 127));
+        _exit((perror("execve"), 127));
 }
 
 int	write_error_message(int fd, char *cmd, char *arg, char *error_msg)

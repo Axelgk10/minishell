@@ -37,72 +37,64 @@ char	*get_home_shortcut(char *cwd)
     return (ft_strdup(cwd));
 }
 
-int	change_directory(char *path)
+static char	*get_env_value_from_shell(t_shell *shell, char *var_name)
+{
+	int		i;
+	size_t	len;
+
+	if (!shell || !shell->env || !var_name)
+		return (NULL);
+	len = ft_strlen(var_name);
+	i = 0;
+	while (shell->env[i])
+	{
+		if (ft_strncmp(shell->env[i], var_name, len) == 0
+			&& shell->env[i][len] == '=')
+			return (shell->env[i] + len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
+int	change_directory(t_shell *shell, char *path)
 {
 	char	*expanded_path;
 	char	*oldpwd;
-	char	cwd_buffer[4096];
 
 	if (!path)
 	{
-		path = getenv("HOME");
+		path = get_env_value_from_shell(shell, "HOME");
 		if (!path)
-		{
-			printf("cd: HOME not set\n");
-			return (1);
-		}
-		oldpwd = getcwd(cwd_buffer, sizeof(cwd_buffer));
-		if (oldpwd)
-			setenv("OLDPWD", oldpwd, 1);
-		chdir(path);
-		getcwd(cwd_buffer, sizeof(cwd_buffer));
-		setenv("PWD", cwd_buffer, 1);
+			return (write(2, "cd: HOME not set\n", 17), 1);
+		if (chdir(path) != 0)
+			return (perror("cd"), 1);
 	}
 	else if (ft_strncmp(path, "-", 1) == 0 && path[1] == '\0')
 	{
-		oldpwd = getenv("OLDPWD");
+		oldpwd = get_env_value_from_shell(shell, "OLDPWD");
 		if (!oldpwd)
-		{
-			printf("cd: OLDPWD not set\n");
-			return (1);
-		}
-		printf("%s\n", oldpwd);
-		setenv("OLDPWD", getenv("PWD"), 1);
-		chdir(oldpwd);
-		getcwd(cwd_buffer, sizeof(cwd_buffer));
-		setenv("PWD", cwd_buffer, 1);
+			return (write(2, "cd: OLDPWD not set\n", 19), 1);
+		write(1, oldpwd, ft_strlen(oldpwd));
+		write(1, "\n", 1);
+		if (chdir(oldpwd) != 0)
+			return (perror("cd"), 1);
 	}
 	else if (path[0] == '~' && (path[1] == '\0' || path[1] == '/'))
 	{
-		expanded_path = ft_strjoin(getenv("HOME"), path + 1);
+		expanded_path = ft_strjoin(get_env_value_from_shell(shell, "HOME"),
+				path + 1);
 		if (!expanded_path)
 			return (1);
-		oldpwd = getcwd(cwd_buffer, sizeof(cwd_buffer));
-		if (oldpwd)
-			setenv("OLDPWD", oldpwd, 1);
 		if (chdir(expanded_path) != 0)
-		{
-			perror("cd");
-			free(expanded_path);
-			return (1);
-		}
-		getcwd(cwd_buffer, sizeof(cwd_buffer));
-		setenv("PWD", cwd_buffer, 1);
+			return (perror("cd"), free(expanded_path), 1);
 		free(expanded_path);
 	}
 	else
 	{
-		oldpwd = getcwd(cwd_buffer, sizeof(cwd_buffer));
-		if (oldpwd)
-			setenv("OLDPWD", oldpwd, 1);
 		if (chdir(path) != 0)
-		{
-			perror("cd");
-			return (1);
-		}
-		getcwd(cwd_buffer, sizeof(cwd_buffer));
-		setenv("PWD", cwd_buffer, 1);
+			return (perror("cd"), 1);
 	}
+	update_envs(shell);
 	return (0);
 }
 

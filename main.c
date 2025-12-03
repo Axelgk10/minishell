@@ -3,68 +3,6 @@
 int g_exit_status = 0;
 t_shell *g_shell = NULL;
 
-// ✅ Función de limpieza automática al salir - Consolidada
-static void	cleanup_on_exit(void)
-{
-	if (g_shell)
-	{
-		// Liberar environment
-		if (g_shell->env)
-		{
-			int i = 0;
-			int count = g_shell->env_count;
-			
-			// ✅ Si env_count es 0 pero env está asignado, contar hasta NULL
-			if (count == 0)
-			{
-				while (g_shell->env[i] != NULL)
-					i++;
-				count = i;
-			}
-			
-			// ✅ Liberar todos los strings
-			i = 0;
-			while (i < count)
-			{
-				if (g_shell->env[i])
-				{
-					free(g_shell->env[i]);
-					g_shell->env[i] = NULL;
-				}
-				i++;
-			}
-			free(g_shell->env);
-			g_shell->env = NULL;
-		}
-		
-		// Liberar otros campos
-		if (g_shell->prompt)
-		{
-			free(g_shell->prompt);
-			g_shell->prompt = NULL;
-		}
-		if (g_shell->tokens)
-		{
-			free_tokens(&g_shell->tokens);
-			g_shell->tokens = NULL;
-		}
-		if (g_shell->commands)
-		{
-			free_commands(&g_shell->commands);
-			g_shell->commands = NULL;
-		}
-		if (g_shell->local_vars)
-		{
-			// TODO: implement local_vars cleanup if needed
-		}
-		
-		// ✅ Free the shell structure itself (was allocated on heap)
-		free(g_shell);
-		g_shell = NULL;
-	}
-	rl_clear_history();
-}
-
 void	free_shell_after_execution(t_shell *shell)
 {
     if (!shell)
@@ -202,8 +140,6 @@ int	main(int argc, char **argv, char **envp)
     }
     
     g_shell = shell;
-    // ✅ Registra función de limpieza automática ANTES de cualquier inicialización
-    atexit(cleanup_on_exit);
     init_shell(shell, envp);
     init_signals();
     while (1)
