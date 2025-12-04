@@ -1,6 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/10 18:38:00 by gguardam          #+#    #+#             */
+/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-extern t_shell *g_shell;
+#include "../minishell.h"
 
 void	fd_checker(t_shell *shell)
 {
@@ -25,8 +35,6 @@ void	status_wait(pid_t pid, int status)
 		g_exit_status = 128 + WTERMSIG(status);
 	else
 		g_exit_status = 1;
-	if (g_shell)
-		g_shell->exit_status = g_exit_status;
 }
 
 char	*find_binary(char *command, char **paths)

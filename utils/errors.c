@@ -6,13 +6,11 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:37 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/03 18:00:56 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-extern t_shell *g_shell;
 
 void	error_executing\
 (int site_of_error, char **env, char **cmd_params)
@@ -41,10 +39,11 @@ int	write_error_message(int fd, char *cmd, char *arg, char *error_msg)
     return (127);
 }
 
-void	null_input(void)
+void	null_input(t_shell *shell)
 {
-    printf("exit\n");
-    cleanup_shell(g_shell);
-    rl_clear_history();
-    exit(0);
+	printf("exit\n");
+	if (shell)
+		cleanup_shell(shell);
+	rl_clear_history();
+	exit(0);
 }

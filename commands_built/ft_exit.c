@@ -1,6 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/10 18:35:35 by gguardam          #+#    #+#             */
+/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-extern t_shell *g_shell;
+#include "../minishell.h"
 
 static int	is_numeric(char *str)
 {
@@ -28,32 +38,32 @@ void	manage_exit(t_shell *shell)
     {
         if (!is_numeric(shell->commands->av[1]))
         {
-            write_error_message(STDERR_FILENO, "exit", shell->commands->av[1], "numeric argument required");
+            write_error_message(STDERR_FILENO, "exit",
+                shell->commands->av[1], "numeric argument required");
             exit_code = 2;
         }
         else
             exit_code = ft_atoi(shell->commands->av[1]);
     }
     
-    // ✅ LIBERA COMPLETAMENTE ANTES DE SALIR
-    if (g_shell)
+    if (shell)
     {
-        if (g_shell->tokens)
+        if (shell->tokens)
         {
-            free_tokens(&g_shell->tokens);
-            g_shell->tokens = NULL;
+            free_tokens(&shell->tokens);
+            shell->tokens = NULL;
         }
-        if (g_shell->commands)
+        if (shell->commands)
         {
-            free_commands(&g_shell->commands);
-            g_shell->commands = NULL;
+            free_commands(&shell->commands);
+            shell->commands = NULL;
         }
-        if (g_shell->prompt)
+        if (shell->prompt)
         {
-            free(g_shell->prompt);
-            g_shell->prompt = NULL;
+            free(shell->prompt);
+            shell->prompt = NULL;
         }
-        cleanup_shell(g_shell);
+        cleanup_shell(shell);
     }
     
     // ✅ Libera readline history

@@ -1,129 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_piped.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/10 18:38:00 by gguardam          #+#    #+#             */
+/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-
-static int	execute_builtin_cd_pwd_exit(t_shell *shell, t_cmd *cmd)
-{
-	if (!ft_strcmp(cmd->av[0], "cd"))
-		return (change_directory(shell, cmd->av[1]));
-	if (!ft_strcmp(cmd->av[0], "pwd"))
-		return (ft_pwd(cmd));
-	if (!ft_strcmp(cmd->av[0], "exit"))
-	{
-		manage_exit(shell);
-		return (0);
-	}
-	return (-1);
-}
-
-static int	execute_builtin_env_echo_export(t_shell *shell, t_cmd *cmd)
-{
-	if (!ft_strcmp(cmd->av[0], "env"))  // ✅ SIN la condición got_path
-		return (ft_env(shell));
-	if (!ft_strcmp(cmd->av[0], "echo"))
-		return (ft_echo(cmd));
-	if (!ft_strcmp(cmd->av[0], "export"))
-		return (export_variables(shell));
-	if (!ft_strcmp(cmd->av[0], "unset"))
-		return (unset_variables(shell));
-	if (ft_strchr(cmd->av[0], '='))
-		return (set_local_var(shell));
-	return (-1);
-}
-
-static int	execute_builtin_in_pipeline(t_shell *shell, t_cmd *cmd)
-{
-	int	result;
-
-	if (!shell || !cmd || !cmd->av || !cmd->av[0])
-		return (1);
-	result = execute_builtin_cd_pwd_exit(shell, cmd);
-	if (result != -1)
-		return (result);
-	result = execute_builtin_env_echo_export(shell, cmd);
-	if (result != -1)
-		return (result);
-	return (write_error_message(STDERR_FILENO, cmd->av[0], "", "command not found"));
-}
-
-static void	setup_child_input(int prev_pipe_out, t_cmd *cmd)
-{
-	if (prev_pipe_out > 2)
-	{
-		dup2(prev_pipe_out, STDIN_FILENO);
-		close(prev_pipe_out);
-	}
-	else if (cmd->in_fd != STDIN_FILENO && cmd->in_fd > 2)
-	{
-		dup2(cmd->in_fd, STDIN_FILENO);
-		close(cmd->in_fd);
-	}
-}
-
-static void	setup_child_output(t_cmd *cmd, int *pipe_fd)
-{
-	if (cmd->next)
-	{
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
-		close(pipe_fd[0]);
-	}
-	else if (cmd->out_fd != STDOUT_FILENO && cmd->out_fd > 2)
-	{
-		dup2(cmd->out_fd, STDOUT_FILENO);
-		close(cmd->out_fd);
-	}
-}
-
-static int	execute_child_process(t_shell *shell, t_cmd *cmd, int prev_pipe_out, int *pipe_fd, pid_t *pids)
-{
-	char	**path_env;
-	char	*bin_path;
-
-	setup_child_input(prev_pipe_out, cmd);
-	setup_child_output(cmd, pipe_fd);
-	if (!cmd->av || !cmd->av[0] || cmd->av[0][0] == '\0')
-	{
-		write_error_message(STDERR_FILENO, "", "", "command not found");
-		free(pids);
-		_exit(127);
-	}
-	if (cmd->is_builtin)
-	{
-		free(pids);
-		_exit(execute_builtin_in_pipeline(shell, cmd));
-	}
-	path_env = get_path_values(shell->env, "PATH");
-	bin_path = find_binary(cmd->av[0], path_env);
-	if (!bin_path)
-	{
-		// ✅ Valida si PATH existe
-		if (!got_path(shell))
-		{
-			write_error_message(STDERR_FILENO, cmd->av[0], "", "No such file or directory");
-		}
-		else
-		{
-			write_error_message(STDERR_FILENO, cmd->av[0], "", "command not found");
-		}
-		// ✅ Libera path_env
-		int i = 0;
-		while(path_env && path_env[i])
-			free(path_env[i++]);
-		free(path_env);
-		free(pids);
-		_exit(127);
-	}
-	if (execve(bin_path, cmd->av, shell->env) == -1)
-	{
-		perror("execve");
-		free(bin_path);
-		int i = 0;
-		while(path_env && path_env[i])
-			free(path_env[i++]);
-		free(path_env);
-		_exit(126);
-	}
-	_exit(127);
-}
 
 static int	count_commands(t_cmd *commands)
 {
@@ -138,38 +25,6 @@ static int	count_commands(t_cmd *commands)
 		current = current->next;
 	}
 	return (count);
-}
-
-static void	handle_parent_cleanup(int *prev_pipe_out, t_cmd *current, int *pipe_fd)
-{
-	if (*prev_pipe_out > 2)
-		close(*prev_pipe_out);
-	if (current->next)
-	{
-		close(pipe_fd[1]);
-		*prev_pipe_out = pipe_fd[0];
-	}
-}
-
-static int	fork_and_execute(t_shell *shell, t_cmd *current, int prev_pipe_out, int *pipe_fd, pid_t *pids)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		return (-1);
-	}
-	if (pid == 0)
-		execute_child_process(shell, current, prev_pipe_out, pipe_fd, pids);
-	return (pid);
-}
-
-static void	cleanup_pipeline(pid_t *pids)
-{
-	if (pids)
-		free(pids);
 }
 
 static int	wait_all_processes(pid_t *pids, int count, t_shell *shell)
@@ -191,7 +46,7 @@ static int	wait_all_processes(pid_t *pids, int count, t_shell *shell)
 		shell->exit_status = WEXITSTATUS(last_status);
 	else if (WIFSIGNALED(last_status))
 		shell->exit_status = 128 + WTERMSIG(last_status);
-	cleanup_pipeline(pids);
+	free(pids);
 	return (shell->exit_status);
 }
 
@@ -217,10 +72,9 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
 	int		i;
 	int		pipe_fd[2];
 	int		prev_pipe_out;
+	pid_t	pid;
 
-	if (!shell || !commands)
-		return (1);
-	if (!has_valid_commands(commands))
+	if (!shell || !commands || !has_valid_commands(commands))
 		return (1);
 	count = count_commands(commands);
 	pids = malloc(sizeof(pid_t) * count);
@@ -234,12 +88,13 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
 		if (current->next && pipe(pipe_fd) == -1)
 		{
 			perror("pipe");
-			cleanup_pipeline(pids);
+			free(pids);
 			return (1);
 		}
-		pids[i] = fork_and_execute(shell, current, prev_pipe_out, pipe_fd, pids);
-		if (pids[i] == -1)
+		pid = fork();
+		if (pid == -1)
 		{
+			perror("fork");
 			if (prev_pipe_out > 2)
 				close(prev_pipe_out);
 			if (current->next)
@@ -247,10 +102,20 @@ int	execute_pipeline(t_shell *shell, t_cmd *commands)
 				close(pipe_fd[0]);
 				close(pipe_fd[1]);
 			}
-			cleanup_pipeline(pids);
+			free(pids);
 			return (1);
 		}
-		handle_parent_cleanup(&prev_pipe_out, current, pipe_fd);
+		if (pid == 0)
+			execute_child_process(shell, current, prev_pipe_out,
+				pipe_fd, pids);
+		pids[i] = pid;
+		if (prev_pipe_out > 2)
+			close(prev_pipe_out);
+		if (current->next)
+		{
+			close(pipe_fd[1]);
+			prev_pipe_out = pipe_fd[0];
+		}
 		current = current->next;
 		i++;
 	}

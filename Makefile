@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/12/03 13:34:11 by axgimene         ###   ########.fr        #
+#    Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 SOURCES = main.c \
+			main_quotes.c \
+			main_input.c \
 			user_route/dir_manager.c \
 			commands_built/ft_echo.c \
 			commands_built/ft_env.c \
@@ -28,6 +30,8 @@ SOURCES = main.c \
 			execute/execution_single_command.c \
 			execute/execution_piped.c \
 			execute/execution_piped_utils.c \
+			execute/execution_piped_builtins.c \
+			execute/execution_piped_child.c \
 			utils/main_utils.c \
 			utils/envs.c \
 			utils/envs_utils.c \
