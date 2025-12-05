@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:00:00 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/05 15:02:55 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:52:52 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ size_t home_len, size_t cwd_len)
 {
 	char	*result;
 
+	(void)home;
 	if (cwd[home_len] == '\0')
 		return (ft_strdup("~"));
 	else if (cwd[home_len] == '/')

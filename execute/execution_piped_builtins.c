@@ -54,5 +54,5 @@ int	execute_builtin_in_pipeline(t_shell *shell, t_cmd *cmd)
 	if (result != -1)
 		return (result);
 	return (write_error_message(STDERR_FILENO, cmd->av[0],
-		"", "command not found"));
+			"", "command not found"));
 }

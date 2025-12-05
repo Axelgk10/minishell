@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:35:15 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/05 14:03:57 by gguardam         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:42:09 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,11 @@ static void	is_pwd(t_shell *shell, int i)
 	}
 	else
 	{
-		return;
+		return ;
 	}
-	
 	if (new_pwd)
 	{
-		free(shell->env[i]);  // ✅ Libera el valor anterior
+		free(shell->env[i]);
 		shell->env[i] = new_pwd;
 	}
 }
@@ -46,7 +45,7 @@ static void	is_oldpwd(t_shell *shell, int i, char	*old_pwd)
 	new_oldpwd = ft_strjoin("OLDPWD=", old_pwd);
 	if (new_oldpwd)
 	{
-		free(shell->env[i]);  // ✅ Libera el valor anterior
+		free(shell->env[i]);
 		shell->env[i] = new_oldpwd;
 	}
 }
@@ -58,17 +57,17 @@ void	update_envs(t_shell *shell)
 
 	old_pwd = NULL;
 	i = 0;
-	while(shell->env[i])
+	while (shell->env[i])
 	{
 		if (ft_strncmp(shell->env[i], "PWD=", 4) == 0)
 		{
 			old_pwd = ft_strdup(shell->env[i] + 4);
-			break;
+			break ;
 		}
 		i++;
 	}
 	i = 0;
-	while(shell->env[i])
+	while (shell->env[i])
 	{
 		if (ft_strncmp(shell->env[i], "PWD=", 4) == 0)
 			is_pwd(shell, i);

@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:35:13 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/01 13:30:52 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 15:33:55 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,16 @@ int	ft_echo(t_cmd *cmd)
 	int	newline;
 	int	j;
 
-	i = 1;
+	i = 0;
 	newline = 1;
-	while (cmd->av[i])
+	while (cmd->av[++i] && cmd->av[i][0] == '-' && cmd->av[i][1] == 'n')
 	{
-		if (cmd->av[i][0] == '-' && cmd->av[i][1] == 'n')
-		{
-			j = 1;
-			while (cmd->av[i][j] == 'n')
-				j++;
-			if (cmd->av[i][j] == '\0')
-			{
-				newline = 0;
-				i++;
-				continue;
-			}
-		}
-		break;
+		j = 0;
+		while (cmd->av[i][++j] == 'n')
+			;
+		if (cmd->av[i][j] != '\0')
+			break ;
+		newline = 0;
 	}
 	while (cmd->av[i])
 	{
@@ -43,7 +36,5 @@ int	ft_echo(t_cmd *cmd)
 			ft_putchar_fd(' ', cmd->out_fd);
 		i++;
 	}
-	if (newline)
-		ft_putchar_fd('\n', cmd->out_fd);
-	return (0);
+	return (newline && (ft_putchar_fd('\n', cmd->out_fd), 0), 0);
 }

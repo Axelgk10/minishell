@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:44 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 18:04:30 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ int name_len)
 		return ;
 	}
 	env_count = count_env_vars(env_var);
-	// ✅ El array fue asignado con espacio extra en init_shell (+ 100 slots)
-	// por lo que es seguro escribir en env_count y env_count + 1
 	env_var[env_count] = new_var;
 	env_var[env_count + 1] = NULL;
 }
@@ -87,7 +85,6 @@ void	add_or_modify_var(char **env_var, char *var_assignment)
 		new_var = create_var_with_value(var_assignment, equals_pos, \
 &var_name, &name_len);
 	}
-	
 	if (new_var)
 		update_env_array(env_var, new_var, var_name, name_len);
 	if (equals_pos && var_name != var_assignment)
@@ -120,15 +117,15 @@ char	*extract_var_value(char *var_assignment)
 	int		i;
 
 	i = 0;
-	while(var_assignment[i] != '=')
+	while (var_assignment[i] != '=')
 		i++;
 	name_len = i;
-	value_len = ft_strlen(var_assignment) - name_len - 1;  // -1 to exclude '='
+	value_len = ft_strlen(var_assignment) - name_len - 1;
 	var_value = malloc(value_len + 1);
 	if (!var_value)
 		return (NULL);
 	i = 0;
-	while(i < value_len)
+	while (i < value_len)
 	{
 		var_value[i] = var_assignment[name_len + 1 + i];
 		i++;
