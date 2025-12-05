@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 13:18:53 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/24 19:11:48 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 13:25:40 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,31 +48,31 @@ int	setup_pipe_fds(t_cmd *current_cmd, t_cmd *new_cmd)
 
 int	handle_pipe_token(t_token **current_token, t_cmd **current_cmd)
 {
-    t_cmd	*new_cmd;
+	t_cmd	*new_cmd;
 
-    (void)current_token;  // ✅ Ahora el loop principal avanza el puntero
-    if (!(*current_cmd)->av || !(*current_cmd)->av[0])
-    {
-        ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
-        return (0);
-    }
-    set_builtin_flag(*current_cmd);
-    // ✅ NO AVANCES AQUI - El loop principal en process_all_tokens() lo hace
-    new_cmd = create_command();
-    if (!new_cmd)
-    {
-        // Si la creación del nuevo comando falla, no podemos continuar.
-        // Retornamos error. El llamador (parse_tokens) limpiará la lista 'head'.
-        return (0);
-    }
-    if (!setup_pipe_fds(*current_cmd, new_cmd))
-    {
-        free(new_cmd); // ✅ Libera el comando recién creado si el pipe falla.
-        return (0);
-    }
-    (*current_cmd)->next = new_cmd;
-    *current_cmd = new_cmd;
-    return (1);
+	(void)current_token;  // ✅ Ahora el loop principal avanza el puntero
+	if (!(*current_cmd)->av || !(*current_cmd)->av[0])
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+		return (0);
+	}
+	set_builtin_flag(*current_cmd);
+	// ✅ NO AVANCES AQUI - El loop principal en process_all_tokens() lo hace
+	new_cmd = create_command();
+	if (!new_cmd)
+	{
+		// Si la creación del nuevo comando falla, no podemos continuar.
+		// Retornamos error. El llamador (parse_tokens) limpiará la lista 'head'.
+		return (0);
+	}
+	if (!setup_pipe_fds(*current_cmd, new_cmd))
+	{
+		free(new_cmd); // ✅ Libera el comando recién creado si el pipe falla.
+		return (0);
+	}
+	(*current_cmd)->next = new_cmd;
+	*current_cmd = new_cmd;
+	return (1);
 }
 
 int	validate_final_command(t_cmd *current_cmd)

@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 12:21:49 by axgimene          #+#    #+#             */
-/*   Updated: 2025/11/18 12:48:58 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 13:31:02 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
-	
+
 	if (ft_strlen(s1) != ft_strlen(s2))
 		return (1);
 	i = 0;
