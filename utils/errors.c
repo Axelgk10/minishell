@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:37 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:23:56 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void	error_executing\
     (void)env;
     (void)cmd_params;
     if (site_of_error == 0)
-        _exit((perror("command not found"), 127));
+        exit((perror("command not found"), 127));
     else if (site_of_error == 1)
-        _exit((perror("bin not found"), 127));
+        exit((perror("bin not found"), 127));
     else
-        _exit((perror("execve"), 127));
+        exit((perror("execve"), 127));
 }
 
 int	write_error_message(int fd, char *cmd, char *arg, char *error_msg)

@@ -1,0 +1,84 @@
+BORRANDO CARPETA ANTERIOR Y SALIENDO (SOLUCIONADO)
+
+MINISHELL
+~/Proyectos/Minishell$ mkdir testingdir
+~/Proyectos/Minishell$ cd testingdir/
+~/Proyectos/Minishell/testingdir$ mkdir testingdirdir
+~/Proyectos/Minishell/testingdir$ cd testingdirdir
+~/Proyectos/Minishell/testingdir/testingdirdir$ rm -rf ../../testingdir/
+Minishell$ 
+
+BASH
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ mkdir testingdirs/
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ cd testingdirs/
+gguardam@c3r2s2:~/Proyectos/MinishellAx/testingdirs$ mkdir testingdirsdirs
+gguardam@c3r2s2:~/Proyectos/MinishellAx/testingdirs$ cd testingdirsdirs/
+gguardam@c3r2s2:~/Proyectos/MinishellAx/testingdirs/testingdirsdirs$ rm -rf ../../testingdirs/
+gguardam@c3r2s2:~/Proyectos/MinishellAx/testingdirs/testingdirsdirs$ cd ../
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+gguardam@c3r2s2:~/Proyectos/MinishellAx/testingdirs/testingdirsdirs/../$
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+VARIABLES LOCALES (SOLUCIONADO)
+
+~/Proyectos/MinishellAx$ LOCAL_VAR=hola
+~/Proyectos/MinishellAx$ echo $LOCAL_VAR
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+EXPORT VACIO (SOLUCIONADO)
+
+export HOLAMANOLA=
+
+Aparece en ENV y en EXPORT, solo debe aparecer en EXPORT
+
+gguardam@c3r2s2 ~ % bash
+gguardam@c3r2s2:~$ export LOCAL_VAR=
+gguardam@c3r2s2:~$ env | LOCAL_VAR
+LOCAL_VAR: command not found
+gguardam@c3r2s2:~$ env | grep LOCAL_VAR
+LOCAL_VAR=
+gguardam@c3r2s2:~$ export OTHER_LOCAL_VAR
+gguardam@c3r2s2:~$ env | grep OTHER_LOCAL_VAR
+gguardam@c3r2s2:~$ export | grep OTHER_LOCAL_VAR
+declare -x OTHER_LOCAL_VAR
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+UNSET LOCAL VAR (SOLUCIONADO)
+
+~/Proyectos/MinishellAx$ LOCAL_VAR=hola
+~/Proyectos/MinishellAx$ echo $LOCAL_VAR
+hola
+~/Proyectos/MinishellAx$ unset LOCAL_VAR
+~/Proyectos/MinishellAx$ echo $LOCAL_VAR
+hola
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+SE DUPLICAN LAS VARIABLES (SOLUCIONADO)
+
+declare -x LOCAL_VAR="hola"
+declare -x LOCAL_VARhola
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+	(SOLUCIONADO)
+
+ % bash
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ LOCAL_VAR=hola
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ echo $LOCAL_VAR
+hola
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ export LOCAL_VAR+=chau
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ echo $LOCAL_VAR
+holachau
+gguardam@c3r2s2:~/Proyectos/MinishellAx$ exit
+exit
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+_exit (SOLUCIONADO)
+char	cwd_buffer[1024]; (SOLUCIONADO)
+#define _POSIX_C_SOURCE 200809L (SOLUCIONADO)
+extern int g_exit_status; (SOLUCIONADO)

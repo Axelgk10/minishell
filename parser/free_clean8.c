@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_clean8.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:06:33 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:46 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:39:20 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void	free_tokens(t_token **tokens)
 	t_token	*next;
 
 	if (!tokens || !*tokens)
-		return;
-	
+		return ;
 	current = *tokens;
 	while (current)
 	{

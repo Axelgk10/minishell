@@ -17,7 +17,7 @@ int	execute_builtin_cd_pwd_exit(t_shell *shell, t_cmd *cmd)
 	if (!ft_strcmp(cmd->av[0], "cd"))
 		return (change_directory(shell, cmd->av[1]));
 	if (!ft_strcmp(cmd->av[0], "pwd"))
-		return (ft_pwd(cmd));
+		return (ft_pwd(shell, cmd));
 	if (!ft_strcmp(cmd->av[0], "exit"))
 	{
 		manage_exit(shell);

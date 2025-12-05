@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_expander_utils7.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 12:00:50 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:26 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:43:20 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static char	*process_char_in_expansion(t_shell *shell, char *str, int *i)
 		return (handle_regular_char(str, i));
 }
 
-// ✅ FUNCIÓN HELPER PARA DETECTAR SI HAY EXPANSIÓN O COMILLAS
 static int	requires_expansion(char *str)
 {
 	int	i;
@@ -63,7 +62,6 @@ void	expand_variables(t_shell *shell, t_token *tokens)
 	{
 		if (current->type == T_WORD && current->value)
 		{
-			// Solo expande si es necesario
 			if (requires_expansion(current->value))
 			{
 				expanded = expand_string(shell, current->value);
@@ -72,8 +70,6 @@ void	expand_variables(t_shell *shell, t_token *tokens)
 					free(current->value);
 					current->value = expanded;
 				}
-				// ✅ Si expand_string falla, mantenemos el valor original
-				// (no es un error crítico, solo no se expande)
 			}
 		}
 		current = current->next;

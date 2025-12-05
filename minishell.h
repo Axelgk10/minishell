@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 #	define MINISHELL_H
 
-#define _POSIX_C_SOURCE 200809L //?
+#define _POSIX_C_SOURCE 200809L //Signals, chdir, cwd
 
 # include <sys/stat.h> //Ax
 # include <dirent.h> //Ax
@@ -57,7 +57,8 @@ typedef struct s_shell
     t_cmd		*commands;
     char		**env;
     char		**local_vars;
-    char		*prompt; // ✅ AÑADE ESTA LÍNEA
+    char		*prompt;
+    char		*logical_pwd;
     int			exit_status;
     int			stdin_copy;
     int			stdout_copy;
@@ -69,12 +70,27 @@ extern int g_exit_status;
 //dir_manager
 int		change_directory(t_shell *shell, char *path);
 char	*format_cwd(char *cwd);
-char	*get_home_shortcut(char *cwd);  // ✅ AÑADE ESTA LÍNEA
+char	*get_home_shortcut(char *cwd);
+void	update_pwd_after_cd(t_shell *shell);
+
+//dir_helpers
+int		handle_home_cd(t_shell *shell);
+int		handle_oldpwd_cd(t_shell *shell);
+int		handle_tilde_cd(t_shell *shell, char *path);
+int		handle_getcwd_error(t_shell *shell, char *path);
+int		handle_relative_cd(t_shell *shell, char *path);
+
+//path_utils
+char	*create_tilde_result(char *cwd, char *home, size_t home_len, size_t cwd_len);
+char	*get_env_value_from_shell(t_shell *shell, char *var_name);
+char	*process_parent_directory(char *resolved);
+char	*handle_dotdot_path(char *resolved, char **remaining_path);
+char	*resolve_logical_path(char *logical_pwd, char *path);
 
 //commands
 int		ft_echo(t_cmd *command);
 int		ft_env(t_shell *shell);
-int		ft_pwd(t_cmd *command);
+int		ft_pwd(t_shell *shell, t_cmd *command);
 void	update_envs(t_shell *shell);
 void	manage_exit(t_shell *shell);
 void	ft_export_env(t_shell *shell);
@@ -123,6 +139,7 @@ int		count_env_vars(char **env_var);
 void	del_var(t_shell *shell);
 int		free_memory(char *modified_arg, char *var_name, char *var_value);
 int		set_local_var(t_shell *shell);
+char	*move_local_var_to_env(t_shell *shell, char *var_name);
 
 //Utils Export
 //char	*create_var_without_value(char *var_assignment, int *name_len);

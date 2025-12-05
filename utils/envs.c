@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envs.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:37:33 by gguardam          #+#    #+#             */
-/*   Updated: 2025/11/28 13:39:22 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:21:20 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static int	add_or_append(t_shell *shell, int i)
 		var_name[ft_strlen(var_name) - 1] = '\0';
 	if(find_variable_index(shell->env, var_name, ft_strlen(var_name)) != -1)
 		result = flag;
+	else if(shell->local_vars && find_variable_index(shell->local_vars, var_name, ft_strlen(var_name)) != -1)
+		result = flag;
 	else
 		result = 0;
 	if (var_name != shell->commands->av[i])
@@ -50,10 +52,12 @@ static int	process_export_arg(t_shell *shell, char *arg)
 	char	*var_name;
 	char	*var_value;
 	char	*new_var;
+	char	*local_var;
 
 	var_name = NULL;
 	var_value = NULL;
 	new_var = NULL;
+	local_var = NULL;
 	equals_pos = ft_strchr(arg, '=');
 	if(equals_pos)
 	{
@@ -67,10 +71,24 @@ static int	process_export_arg(t_shell *shell, char *arg)
 			free(var_value);
 		}
 	}
+	else
+	{
+		// Si no tiene '=', podría ser un export de variable sin valor
+		var_name = arg;
+	}
+	
 	if(is_valid_var_name(var_name) || is_valid_var_name(arg))
 	{
+		// Buscar si la variable existe en local_vars y moverla
+		local_var = move_local_var_to_env(shell, var_name ? var_name : arg);
+		
 		if(new_var)
 			add_or_modify_var(shell->env, new_var);
+		else if (local_var)
+		{
+			add_or_modify_var(shell->env, local_var);
+			free(local_var);
+		}
 		else
 			add_or_modify_var(shell->env, arg);
 		if (var_name && var_name != arg)
@@ -81,6 +99,8 @@ static int	process_export_arg(t_shell *shell, char *arg)
 		free(var_name);
 	if (new_var)
 		free(new_var);
+	if (local_var)
+		free(local_var);
 	return (write_error_message(shell->commands->out_fd, "export", arg, \
 "not a valid identifier"));
 }
@@ -93,13 +113,25 @@ static int	append_arg(t_shell *shell, char *arg)
 	char	*equal_pos;
 	char	*env_var;
 	char	*var_value;
+	char	*local_var;
 
 	i = 0;
+	local_var = NULL;
 	equal_pos = ft_strchr(arg, '=');
 	mod_env_name = extract_var_name(arg, equal_pos);
 	if (!mod_env_name)
 		return (1);
 	mod_env_name[ft_strlen(mod_env_name) - 1] = '\0';
+	
+	// Primero buscar si existe en local_vars y moverla
+	local_var = move_local_var_to_env(shell, mod_env_name);
+	if (local_var)
+	{
+		add_or_modify_var(shell->env, local_var);
+		free(local_var);
+	}
+	
+	// Buscar la variable en env para hacer append
 	while(shell->env[i])
 	{
 		equal_pos = ft_strchr(shell->env[i], '=');

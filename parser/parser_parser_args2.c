@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parser_args2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:57:41 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:20 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:44:11 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_cmd	*create_command(void)
 	if (!cmd)
 		return (NULL);
 	cmd->av = NULL;
-	cmd->ac = 0;  // ✅ Inicializa ac
+	cmd->ac = 0;
 	cmd->in_fd = STDIN_FILENO;
 	cmd->out_fd = STDOUT_FILENO;
 	cmd->pipe[0] = -1;
@@ -52,12 +52,10 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 	int		i;
 
 	if (!cmd || !arg)
-		return;
-	
+		return ;
 	new_av = malloc(sizeof(char *) * (cmd->ac + 2));
 	if (!new_av)
-		return;
-	
+		return ;
 	i = 0;
 	while (i < cmd->ac)
 	{
@@ -65,16 +63,14 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 		i++;
 	}
 	new_av[i] = ft_strdup(arg);
-	if (!new_av[i])  // ✅ Verifica si ft_strdup falló
+	if (!new_av[i])
 	{
 		free(new_av);
-		return;
+		return ;
 	}
 	new_av[i + 1] = NULL;
-	
 	if (cmd->av)
 		free(cmd->av);
-	
 	cmd->av = new_av;
 	cmd->ac++;
 }

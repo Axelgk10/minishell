@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_parser_main4.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 09:26:02 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:09 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:46:16 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static int	process_token_in_parser(t_token **current_token,
 		return (handle_pipe_token(current_token, current_cmd));
 	else if (is_redirection_token((*current_token)->type))
 		return (process_redir_token(current_token, current_cmd));
-	
 	return (1);
 }
 
@@ -63,9 +62,7 @@ static int	process_all_tokens(t_token **current, t_cmd **current_cmd)
 	while (*current)
 	{
 		result = process_token_in_parser(current, current_cmd);
-		// ✅ AVANZA EL PUNTERO SIEMPRE
 		*current = (*current)->next;
-		
 		if (!result)
 			return (0);
 	}
@@ -85,7 +82,6 @@ t_cmd	*parse_tokens(t_token *tokens)
 	init_first_command(&head, &current_cmd);
 	if (!current_cmd)
 		return (NULL);
-	
 	if (!process_all_tokens(&current, &current_cmd))
 	{
 		free_commands(&head);

@@ -66,12 +66,12 @@ void	execute_child_process(t_shell *shell, t_cmd *cmd,
 	{
 		write_error_message(STDERR_FILENO, "", "", "command not found");
 		free(pids);
-		_exit(127);
+		exit(127);
 	}
 	if (cmd->is_builtin)
 	{
 		free(pids);
-		_exit(execute_builtin_in_pipeline(shell, cmd));
+		exit(execute_builtin_in_pipeline(shell, cmd));
 	}
 	path_env = get_path_values(shell->env, "PATH");
 	bin_path = find_binary(cmd->av[0], path_env);
@@ -85,14 +85,14 @@ void	execute_child_process(t_shell *shell, t_cmd *cmd,
 				"", "command not found");
 		cleanup_path_env(path_env);
 		free(pids);
-		_exit(127);
+		exit(127);
 	}
 	if (execve(bin_path, cmd->av, shell->env) == -1)
 	{
 		perror("execve");
 		free(bin_path);
 		cleanup_path_env(path_env);
-		_exit(126);
+		exit(126);
 	}
-	_exit(127);
+	exit(127);
 }

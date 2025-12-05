@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:35:15 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:03:57 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,25 @@ static void	is_pwd(t_shell *shell, int i)
 	char	*current_dir;
 
 	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
+	if (current_dir)
+	{
+		new_pwd = ft_strjoin("PWD=", current_dir);
+		free(current_dir);
+	}
+	else if (shell->logical_pwd)
+	{
+		new_pwd = ft_strjoin("PWD=", shell->logical_pwd);
+	}
+	else
+	{
 		return;
-	new_pwd = ft_strjoin("PWD=", current_dir);
+	}
+	
 	if (new_pwd)
 	{
 		free(shell->env[i]);  // ✅ Libera el valor anterior
 		shell->env[i] = new_pwd;
 	}
-	free(current_dir);
 }
 
 static void	is_oldpwd(t_shell *shell, int i, char	*old_pwd)

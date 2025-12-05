@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_helpers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 14:00:00 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:26:07 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:48:50 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,21 @@ void	print_redir_error(t_token *filename_token)
 	else
 		ft_putstr_fd("newline", 2);
 	ft_putstr_fd("'\n", 2);
+}
+
+char	*handle_single_quotes(char *str, int *i)
+{
+	int		start;
+	char	*quoted_content;
+
+	++(*i);
+	start = *i;
+	while (str[*i] && str[*i] != '\'')
+		(*i)++;
+	quoted_content = ft_substr(str, start, *i - start);
+	if (!quoted_content)
+		return (NULL);
+	if (str[*i] == '\'')
+		(*i)++;
+	return (quoted_content);
 }

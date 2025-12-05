@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:00:00 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:38:26 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+int	g_exit_status = 0;
 
 void	free_shell_after_execution(t_shell *shell)
 {
@@ -49,13 +49,18 @@ static void	handle_input(t_shell *shell, char *input)
 
 static void	update_prompt(t_shell *shell, char *cwd_buffer)
 {
+	char	*current_dir;
+
 	if (shell->prompt)
 	{
 		free(shell->prompt);
 		shell->prompt = NULL;
 	}
-	if (getcwd(cwd_buffer, 1024) != NULL)
+	current_dir = getcwd(cwd_buffer, 1024);
+	if (current_dir != NULL)
 		shell->prompt = format_cwd(cwd_buffer);
+	else if (shell->logical_pwd)
+		shell->prompt = format_cwd(shell->logical_pwd);
 	else
 		shell->prompt = ft_strdup("Minishell$ ");
 }

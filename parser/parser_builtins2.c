@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_builtins2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:45:14 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:34 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:41:16 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	set_builtin_flag(t_cmd *cmd)
 			cmd->is_builtin = 1;
 			return ;
 		}
-		else if(ft_strchr(cmd->av[0], '='))
+		else if (ft_strchr(cmd->av[0], '='))
 		{
 			cmd->is_builtin = 1;
 			return ;

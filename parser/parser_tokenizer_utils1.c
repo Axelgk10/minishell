@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenizer_utils1.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:29:11 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:23:41 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:47:13 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ void	process_token(char *input, int *i, t_token **head)
 		value = extract_word(input, i);
 		type = T_WORD;
 	}
-	if (!value)  // ✅ Valida si extract falló
+	if (!value)
 		return ;
 	new_token = create_token(type, value);
 	if (!new_token)
 	{
-		free(value);  // ✅ LIBERA si create_token falla
+		free(value);
 		return ;
 	}
 	add_token_back(head, new_token);

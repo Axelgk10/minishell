@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   dir_helpers.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/10 18:35:30 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/05 14:03:57 by gguardam         ###   ########.fr       */
+/*   Created: 2025/12/05 15:00:00 by gguardam          #+#    #+#             */
+/*   Updated: 2025/12/05 15:05:31 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_pwd(t_shell *shell, t_cmd *command)
+char	*get_env_value_from_shell(t_shell *shell, char *var_name)
 {
-	char	*cwd;
+	int		i;
+	size_t	len;
 
-	cwd = getcwd(NULL, 0);
-	if (cwd)
+	if (!shell || !shell->env || !var_name)
+		return (NULL);
+	len = ft_strlen(var_name);
+	i = 0;
+	while (shell->env[i])
 	{
-		ft_putstr_fd(cwd, command->out_fd);
-		ft_putchar_fd('\n', command->out_fd);
-		free(cwd);
-		return (0);
+		if (ft_strncmp(shell->env[i], var_name, len) == 0
+			&& shell->env[i][len] == '=')
+			return (shell->env[i] + len + 1);
+		i++;
 	}
-	else if (shell && shell->logical_pwd)
-	{
-		ft_putstr_fd(shell->logical_pwd, command->out_fd);
-		ft_putchar_fd('\n', command->out_fd);
-		return (0);
-	}
-	return (1);
+	return (NULL);
 }

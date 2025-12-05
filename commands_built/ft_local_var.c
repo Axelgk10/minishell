@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_local_var.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:35:30 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 13:47:12 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ static void inspect_local_vars(char ***local_env, char *arg)
 		*local_env = malloc(sizeof(char *) * 2);
 		(*local_env)[0] = ft_strdup(arg);
 		(*local_env)[1] = NULL;
+		if (name_var != arg)
+			free(name_var);
 		return ;
 	}
 	while((*local_env)[i])
@@ -56,12 +58,14 @@ static void inspect_local_vars(char ***local_env, char *arg)
 		{
 			free((*local_env)[i]);
 			(*local_env)[i] = ft_strdup(arg);
+			if (name_var != arg)
+				free(name_var);
 			return ;
 		}
 		i++;
 	}
 	add_local_var(local_env, arg);
-	if(name_var)
+	if (name_var != arg)
 		free(name_var);
 }
 

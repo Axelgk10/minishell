@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirections_Chicken.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 13:50:28 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 13:25:03 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:46:45 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	handle_redirection(t_token **tokens, t_cmd *cmd)
 {
 	t_token_type	type;
 	char			*filename;
-	t_token	*filename_token;
+	t_token			*filename_token;
 
 	if (!tokens || !*tokens || !cmd)
 		return (0);
@@ -55,8 +55,5 @@ int	handle_redirection(t_token **tokens, t_cmd *cmd)
 		return (0);
 	filename = filename_token->value;
 	handle_redirection_mid(type, filename, cmd);
-	// ✅ NO AVANZA - El loop principal lo hará
-	// El llamador (process_redir_token) debe hacer dos avances para saltar
-	// el operator y el filename
 	return (1);
 }

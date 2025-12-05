@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_single_command.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:38:00 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/05 14:24:14 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	just_execute_it_man(t_shell *shell)
 		while(path_env && path_env[i])
 			free(path_env[i++]);
 		free(path_env);
-		_exit(1);
+		exit(1);
 	}
 	else if (pid == 0)
 	{
@@ -67,7 +67,7 @@ void	just_execute_it_man(t_shell *shell)
 			while(path_env && path_env[i])
 				free(path_env[i++]);
 			free(path_env);
-			_exit(127);
+			exit(127);
 		}
 		if (execve(bin_path, shell->commands->av, shell->env) == -1)
 		{
@@ -77,7 +77,7 @@ void	just_execute_it_man(t_shell *shell)
 			while(path_env && path_env[i])
 				free(path_env[i++]);
 			free(path_env);
-			_exit(126);
+			exit(126);
 		}
 	}
 	else if (pid > 0)
@@ -97,7 +97,7 @@ void	execute_builtin(t_shell *shell)
     if (!ft_strcmp(shell->commands->av[0], "cd"))
         shell->exit_status = change_directory(shell, shell->commands->av[1]);
     else if (!ft_strcmp(shell->commands->av[0], "pwd"))
-        shell->exit_status = ft_pwd(shell->commands);
+        shell->exit_status = ft_pwd(shell, shell->commands);
     else if (!ft_strcmp(shell->commands->av[0], "exit"))
         manage_exit(shell);
     else if (!ft_strcmp(shell->commands->av[0], "env"))  // ✅ SIN got_path

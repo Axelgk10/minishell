@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
+#    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/12/04 18:00:00 by axgimene         ###   ########.fr        #
+#    Updated: 2025/12/05 15:04:56 by gguardam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,9 @@ SOURCES = main.c \
 			main_quotes.c \
 			main_input.c \
 			user_route/dir_manager.c \
+			user_route/dir_helpers.c \
+			user_route/path_utils.c \
+			user_route/cd_handlers.c \
 			commands_built/ft_echo.c \
 			commands_built/ft_env.c \
 			commands_built/ft_cd.c \
