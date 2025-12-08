@@ -63,7 +63,7 @@ void	update_envs(t_shell *shell)
 		{
 			old_pwd = ft_strdup(shell->env[i] + 4);
 			is_pwd(shell, i);
-			break;
+			break ;
 		}
 		i++;
 	}

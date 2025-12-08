@@ -75,7 +75,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
-		return (ft_putstr_fd("Error: malloc failed for shell\n", STDERR_FILENO), 1);
+		return (ft_putstr_fd(\
+"Error: malloc failed for shell\n", STDERR_FILENO), 1);
 	init_shell(shell, envp);
 	init_signals();
 	while (1)

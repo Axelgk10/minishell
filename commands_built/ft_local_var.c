@@ -43,8 +43,9 @@ static void	handle_existing_var(char ***local_env, char *arg, char *name_var)
 	i = 0;
 	while ((*local_env)[i])
 	{
-		if (!ft_strncmp((*local_env)[i], name_var, name_len) 
-			&& ((*local_env)[i][name_len] == '=' || (*local_env)[i][name_len] == '\0'))
+		if (!ft_strncmp((*local_env)[i], name_var, name_len) \
+&& ((*local_env)[i][name_len] == '=' || \
+(*local_env)[i][name_len] == '\0'))
 		{
 			var_value = extract_var_value(arg);
 			if (should_append(arg))
@@ -81,12 +82,12 @@ static void	inspect_local_vars(char ***local_env, char *arg)
 		else
 			(*local_env)[0] = ft_strdup(arg);
 		(*local_env)[1] = NULL;
-		if(name_var != arg)
+		if (name_var != arg)
 			free(name_var);
 		return ;
 	}
 	handle_existing_var(local_env, arg, name_var);
-	if(name_var != arg)
+	if (name_var != arg)
 		free(name_var);
 }
 
@@ -100,11 +101,11 @@ static int	process_var(t_shell *shell, char *arg)
 	if (!equals_pos || !var_name)
 		return (1);
 	if (is_valid_var_name(var_name))
-			inspect_local_vars(&shell->local_vars, arg);
+		inspect_local_vars(&shell->local_vars, arg);
 	else
 		write_error_message(shell->commands->out_fd, "export",
 			arg, "not a valid identifier");
-	if((var_name != arg))
+	if ((var_name != arg))
 		free(var_name);
 	return (0);
 }
@@ -117,7 +118,7 @@ int	set_local_var(t_shell *shell)
 	while (shell->commands->av[++i])
 	{
 		if (!ft_strchr(shell->commands->av[i], '='))
-			continue;
+			continue ;
 		if (process_var(shell, shell->commands->av[i]))
 			return (1);
 	}

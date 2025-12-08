@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   local_vars_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/10 18:37:33 by gguardam          #+#    #+#             */
+/*   Updated: 2025/12/05 18:17:20 by axgimene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*create_assignment_from_append(char *arg)
@@ -25,9 +37,9 @@ int	should_append(char	*arg)
 	int	i;
 
 	i = 0;
-	while(arg[i])
+	while (arg[i])
 	{
-		if(arg[i] == '+' && arg[i + 1] == '=')
+		if (arg[i] == '+' && arg[i + 1] == '=')
 			return (1);
 		i++;
 	}

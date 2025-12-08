@@ -41,7 +41,8 @@ env_var[i][j] == var_name[j])
 	return (-1);
 }
 
-static void	preparing_removal(t_shell *shell, char *var_to_delete, int var_name_len)
+static void	preparing_removal(t_shell *shell, \
+char *var_to_delete, int var_name_len)
 {
 	int	i;
 
