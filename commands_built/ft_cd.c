@@ -62,16 +62,16 @@ void	update_envs(t_shell *shell)
 		if (ft_strncmp(shell->env[i], "PWD=", 4) == 0)
 		{
 			old_pwd = ft_strdup(shell->env[i] + 4);
-			break ;
+			is_pwd(shell, i);
+			break;
 		}
 		i++;
 	}
+	process_export_arg(shell, "OLDPWD=");
 	i = 0;
 	while (shell->env[i])
 	{
-		if (ft_strncmp(shell->env[i], "PWD=", 4) == 0)
-			is_pwd(shell, i);
-		else if (ft_strncmp(shell->env[i], "OLDPWD=", 7) == 0 && old_pwd)
+		if (ft_strncmp(shell->env[i], "OLDPWD=", 7) == 0 && old_pwd)
 			is_oldpwd(shell, i, old_pwd);
 		i++;
 	}

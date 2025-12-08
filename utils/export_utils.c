@@ -99,6 +99,8 @@ char	*extract_var_name(char *var_assignment, char *equals_pos)
 	if (equals_pos)
 	{
 		name_len = equals_pos - var_assignment;
+		if (name_len > 0 && var_assignment[name_len - 1] == '+')
+			name_len--;
 		var_name = malloc(name_len + 1);
 		if (!var_name)
 			return (NULL);

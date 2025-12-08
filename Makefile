@@ -27,18 +27,18 @@ SOURCES = main.c \
 			commands_built/ft_cd.c \
 			commands_built/ft_pwd.c \
 			commands_built/ft_exit.c \
-		commands_built/ft_export.c \
-		commands_built/ft_local_var.c \
-		execute/execution_utils.c \
-		execute/binary_utils.c \
-		execute/execution_single_command.c \
-		execute/execution_piped.c \
-		execute/execution_piped_utils.c \
-		execute/execution_piped_builtins.c \
-		execute/execution_piped_child.c \
-		utils/main_utils.c \
+			commands_built/ft_export.c \
+			commands_built/ft_local_var.c \
+			execute/execution_utils.c \
+			execute/binary_utils.c \
+			execute/execution_single_command.c \
+			execute/execution_piped.c \
+			execute/execution_piped_utils.c \
+			execute/execution_piped_builtins.c \
+			execute/execution_piped_child.c \
 			utils/envs.c \
 			utils/envs_utils.c \
+			utils/local_vars_utils.c \
 			utils/envs_export.c \
 			utils/envs_helpers.c \
 			utils/export_utils.c \

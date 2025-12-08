@@ -41,27 +41,34 @@ env_var[i][j] == var_name[j])
 	return (-1);
 }
 
-int	is_valid_var_name(char *name)
+static void	preparing_removal(t_shell *shell, char *var_to_delete, int var_name_len)
 {
 	int	i;
 
-	if (!name || !name[0])
-		return (0);
-	if (!ft_isalpha(name[0]) && name[0] != '_')
-		return (0);
-	i = 1;
-	while (name[i] && name[i] != '=')
+	i = 0;
+	while (shell->env && shell->env[i])
 	{
-		if (!ft_isalnum(name[i]) && name[i] != '_')
-			return (0);
+		if (var_matches(shell->env[i], var_to_delete, var_name_len))
+		{
+			remove_from_array(shell->env, i);
+			return ;
+		}
 		i++;
 	}
-	return (1);
+	i = 0;
+	while (shell->local_vars && shell->local_vars[i])
+	{
+		if (var_matches(shell->local_vars[i], var_to_delete, var_name_len))
+		{
+			remove_from_array(shell->local_vars, i);
+			return ;
+		}
+		i++;
+	}
 }
 
 void	del_var(t_shell *shell)
 {
-	int		i;
 	int		var_name_len;
 	char	*var_to_delete;
 
@@ -69,22 +76,7 @@ void	del_var(t_shell *shell)
 		return ;
 	var_to_delete = shell->commands->av[1];
 	var_name_len = ft_strlen(var_to_delete);
-	i = 0;
-	while (shell->env[i])
-	{
-		if (var_matches(shell->env[i], var_to_delete, var_name_len))
-		{
-			remove_from_array(shell->env, i);
-			break ;
-		}
-		else if (shell->local_vars && \
-var_matches(shell->local_vars[i], var_to_delete, var_name_len))
-		{
-			remove_from_array(shell->local_vars, i);
-			break ;
-		}
-		i++;
-	}
+	preparing_removal(shell, var_to_delete, var_name_len);
 }
 
 char	*move_local_var_to_env(t_shell *shell, char *var_name)

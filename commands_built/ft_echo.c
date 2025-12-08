@@ -6,35 +6,42 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 18:35:13 by gguardam          #+#    #+#             */
-/*   Updated: 2025/12/05 15:33:55 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:45:17 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	is_valid_n_flag(char *arg)
+{
+	int	j;
+
+	if (arg[0] != '-' || arg[1] != 'n')
+		return (0);
+	j = 1;
+	while (arg[j] == 'n')
+		j++;
+	if (arg[j] == '\0')
+		return (1);
+	return (0);
+}
+
 static int	echo_newline(t_cmd *cmd)
 {
 	int	i;
 	int	newline;
-	int	j;
 
 	i = 1;
 	newline = 1;
 	while (cmd->av[i])
 	{
-		if (cmd->av[i][0] == '-' && cmd->av[i][1] == 'n')
+		if (is_valid_n_flag(cmd->av[i]))
 		{
-			j = 1;
-			while (cmd->av[i][j] == 'n')
-				j++;
-			if (cmd->av[i][j] == '\0')
-			{
-				newline = 0;
-				i++;
-				continue;
-			}
+			newline = 0;
+			i++;
+			continue ;
 		}
-		break;
+		break ;
 	}
 	return (newline);
 }
@@ -44,10 +51,17 @@ int	ft_echo(t_cmd *cmd)
 	int	i;
 	int	newline;
 
-	i = 1;
-	if (cmd->av[i][0] == '-' && cmd->av[i][1] == 'n')
-		i++;
 	newline = echo_newline(cmd);
+	i = 1;
+	while (cmd->av[i])
+	{
+		if (is_valid_n_flag(cmd->av[i]))
+		{
+			i++;
+			continue ;
+		}
+		break ;
+	}
 	while (cmd->av[i])
 	{
 		ft_putstr_fd(cmd->av[i], cmd->out_fd);

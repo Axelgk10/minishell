@@ -34,15 +34,26 @@ static void	add_local_var(char ***local_env, char *arg)
 
 static void	handle_existing_var(char ***local_env, char *arg, char *name_var)
 {
-	int	i;
+	int		i;
+	char	*new_var;
+	char	*var_value;
+	int		name_len;
 
+	name_len = ft_strlen(name_var);
 	i = 0;
 	while ((*local_env)[i])
 	{
-		if (!ft_strncmp((*local_env)[i], name_var, ft_strlen(name_var)))
+		if (!ft_strncmp((*local_env)[i], name_var, name_len) 
+			&& ((*local_env)[i][name_len] == '=' || (*local_env)[i][name_len] == '\0'))
 		{
+			var_value = extract_var_value(arg);
+			if (should_append(arg))
+				new_var = ft_strjoin((*local_env)[i], var_value);
+			else
+				new_var = ft_strjoin(name_var, ft_strchr(arg, '='));
 			free((*local_env)[i]);
-			(*local_env)[i] = ft_strdup(arg);
+			free(var_value);
+			(*local_env)[i] = new_var;
 			return ;
 		}
 		i++;
@@ -54,20 +65,28 @@ static void	inspect_local_vars(char ***local_env, char *arg)
 {
 	char	*name_var;
 	char	*equals_pos;
+	char	*processed_arg;
 
 	equals_pos = ft_strchr(arg, '=');
 	name_var = extract_var_name(arg, equals_pos);
 	if (!*local_env)
 	{
 		*local_env = malloc(sizeof(char *) * 2);
-		(*local_env)[0] = ft_strdup(arg);
+		if (should_append(arg))
+		{
+			processed_arg = create_assignment_from_append(arg);
+			(*local_env)[0] = ft_strdup(processed_arg);
+			free(processed_arg);
+		}
+		else
+			(*local_env)[0] = ft_strdup(arg);
 		(*local_env)[1] = NULL;
-		if ((name_var != arg))
+		if(name_var != arg)
 			free(name_var);
 		return ;
 	}
 	handle_existing_var(local_env, arg, name_var);
-	if (name_var != arg)
+	if(name_var != arg)
 		free(name_var);
 }
 
@@ -81,7 +100,7 @@ static int	process_var(t_shell *shell, char *arg)
 	if (!equals_pos || !var_name)
 		return (1);
 	if (is_valid_var_name(var_name))
-		inspect_local_vars(&shell->local_vars, arg);
+			inspect_local_vars(&shell->local_vars, arg);
 	else
 		write_error_message(shell->commands->out_fd, "export",
 			arg, "not a valid identifier");
@@ -93,17 +112,12 @@ static int	process_var(t_shell *shell, char *arg)
 int	set_local_var(t_shell *shell)
 {
 	int		i;
-	int		j;
 
 	i = -1;
 	while (shell->commands->av[++i])
 	{
-		j = -1;
-		while (shell->commands->av[i][++j] != '=')
-			;
-		if (j == 0)
-			return (write_error_message(STDERR_FILENO, shell->commands->av[0],
-					"", "command not found"));
+		if (!ft_strchr(shell->commands->av[i], '='))
+			continue;
 		if (process_var(shell, shell->commands->av[i]))
 			return (1);
 	}

@@ -82,3 +82,109 @@ _exit (SOLUCIONADO)
 char	cwd_buffer[1024]; (SOLUCIONADO)
 #define _POSIX_C_SOURCE 200809L (SOLUCIONADO)
 extern int g_exit_status; (SOLUCIONADO)
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ cd - (SOLUCIONADO)
+cd: OLDPWD not set
+~/Escritorio/42/MinishellAx$ echo $PWD
+/home/gianfranco/Escritorio/42/MinishellAx
+~/Escritorio/42/MinishellAx$ cd utils/
+~/Escritorio/42/MinishellAx/utils$ echo $PWD
+/home/gianfranco/Escritorio/42/MinishellAx/utils
+~/Escritorio/42/MinishellAx/utils$ echo $OLDPWD
+
+~/Escritorio/42/MinishellAx/utils$ 
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx/utils$ echo -n hola (SOLUCIONADO)
+hola~/Escritorio/42/MinishellAx/utils$ echo -nnnnnnnnnnnn hola
+hola~/Escritorio/42/MinishellAx/utils$ echo -nnnnn-nnnnnnn hola
+hola
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ LOCAL_VAR=papa (SOLUCIONADO)
+~/Escritorio/42/MinishellAx$ echo $LOCAL_VAR
+papa
+~/Escritorio/42/MinishellAx$ LOCAL_VAR+=" frita"
+export: LOCAL_VAR+= frita: not a valid identifier
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ ping 8.8.8.8 > ping_test (SOLUCIONADO)
+y ahora?
+esto no volvio mas
+^C
+~/Escritorio/42/MinishellAx$ ~/Escritorio/42/MinishellAx$ 
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ grep TRALALERO (SOLUCIONADO)
+^C
+~/Escritorio/42/MinishellAx$ ~/Escritorio/42/MinishellAx$ 
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ unset LOCAL_VAR
+==44013== Invalid read of size 1
+==44013==    at 0x110B7B: ft_strncmp (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10D712: var_matches (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10D200: del_var (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10CEA0: unset_variables (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10BDF2: execute_builtin (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x1098F1: evaluate_struct (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109A42: process_input (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109585: handle_input (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109728: main (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+==44013== 
+==44013== 
+==44013== Process terminating with default action of signal 11 (SIGSEGV)
+==44013==  Access not within mapped region at address 0x0
+==44013==    at 0x110B7B: ft_strncmp (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10D712: var_matches (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10D200: del_var (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10CEA0: unset_variables (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x10BDF2: execute_builtin (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x1098F1: evaluate_struct (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109A42: process_input (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109585: handle_input (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==    by 0x109728: main (in /home/gianfranco/Escritorio/42/MinishellAx/minishell)
+==44013==  If you believe this happened as a result of a stack
+==44013==  overflow in your program's main thread (unlikely but
+==44013==  possible), you can try to increase the size of the
+==44013==  main thread stack using the --main-stacksize= flag.
+==44013==  The main thread stack size used in this run was 8388608.
+==44013== 
+==44013== HEAP SUMMARY:
+==44013==     in use at exit: 246,638 bytes in 388 blocks
+==44013==   total heap usage: 919 allocs, 531 frees, 271,628 bytes allocated
+==44013== 
+==44013== LEAK SUMMARY:
+==44013==    definitely lost: 0 bytes in 0 blocks
+==44013==    indirectly lost: 0 bytes in 0 blocks
+==44013==      possibly lost: 0 bytes in 0 blocks
+==44013==    still reachable: 73,367 bytes in 305 blocks
+==44013==         suppressed: 173,271 bytes in 83 blocks
+==44013== Reachable blocks (those to which a pointer was found) are not shown.
+==44013== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==44013== 
+==44013== For lists of detected and suppressed errors, rerun with: -s
+==44013== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+
+/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
+
+~/Escritorio/42/MinishellAx$ LOCAL_VAR=papa (SOLUCIONADO)
+~/Escritorio/42/MinishellAx$ echo $LOCAL_VAR
+papa
+~/Escritorio/42/MinishellAx$ LOCAL_VAR+=" frita"
+~/Escritorio/42/MinishellAx$ echo $LOCAL_VAR
+papa frita
+~/Escritorio/42/MinishellAx$ LOCAL_VAR+=" quemada"
+~/Escritorio/42/MinishellAx$ echo $LOCAL_VAR
+papa frita quemada
+~/Escritorio/42/MinishellAx$ LOCAL_VAR=gugi
+~/Escritorio/42/MinishellAx$ echo $LOCAL_VAR
+papa frita quemada

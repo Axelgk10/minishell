@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static int	process_export_arg(t_shell *shell, char *arg)
+int	process_export_arg(t_shell *shell, char *arg)
 {
 	char	*equals_pos;
 	char	*var_name;

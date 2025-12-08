@@ -75,17 +75,19 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell = (t_shell *)malloc(sizeof(t_shell));
 	if (!shell)
-	{
-		ft_putstr_fd("Error: malloc failed for shell\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_putstr_fd("Error: malloc failed for shell\n", STDERR_FILENO), 1);
 	init_shell(shell, envp);
 	init_signals();
 	while (1)
 	{
 		update_prompt(shell, cwd_buffer);
 		input = readline(shell->prompt);
-		handle_input(shell, input);
+		if (!input)
+			handle_input(shell, input);
+		set_signals_for_cmd();
+		if (input && *input)
+			handle_input(shell, input);
+		restore_signals();
 	}
 	cleanup_shell(shell);
 	free(shell);

@@ -142,7 +142,6 @@ int				got_path(t_shell *shell);
 
 //Utils main
 void			null_input(t_shell *shell);
-void			init_signals(void);
 int				check_unclosed_quotes(char *input);
 void			process_input(t_shell *shell, char *input);
 
@@ -155,6 +154,7 @@ int				write_error_message(int fd, char *cmd, char *arg, char *msg);
 int				export_variables(t_shell *shell);
 int				unset_variables(t_shell *shell);
 int				is_valid_var_name(char *name);
+int				process_export_arg(t_shell *shell, char *arg);
 int				find_variable_index(char **env_var,
 					char *var_name, int name_len);
 int				count_env_vars(char **env_var);
@@ -181,6 +181,10 @@ int				find_env_index(char **env, char *mod_env_name);
 void			add_var_to_env(t_shell *shell, char *arg, char *var_name, \
 char *new_var);
 
+//Utils Local Envs
+char			*create_assignment_from_append(char *arg);
+int				should_append(char	*arg);
+
 //Execution Utils
 char			**get_path_values(char **env, const char *var_name);
 
@@ -196,6 +200,10 @@ char			*extract_var_value(char *var_assignment);
 
 //signals
 void			sigint_handler(int sig);
+void			sigint_handler_cmd(int sig);
+void			set_signals_for_cmd(void);
+void			restore_signals(void);
+void			init_signals(void);
 
 //Struct Utils
 void			init_shell(t_shell *shell, char **envp);
