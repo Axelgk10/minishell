@@ -6,7 +6,7 @@
 /*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:24:21 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 18:31:55 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/09 18:26:48 by axgimene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,9 @@ void			null_input(t_shell *shell);
 void			init_signals(void);
 int				check_unclosed_quotes(char *input);
 void			process_input(t_shell *shell, char *input);
+
+//Utils input validation
+int				check_pipe_at_start(t_shell *shell, char *input);
 
 //Utils Errors
 void			error_executing\

@@ -6,7 +6,7 @@
 #    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/12/05 19:14:58 by axgimene         ###   ########.fr        #
+#    Updated: 2025/12/09 18:26:57 by axgimene         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ SOURCES = main.c \
 			utils/errors.c \
 			utils/struct_utils.c \
 			utils/cleanup_utils.c \
+			utils/input_validation.c \
 			signals/signals.c \
 			parser/parser_tokenizer0.c \
 			parser/parser_tokenizer_utils1.c \
