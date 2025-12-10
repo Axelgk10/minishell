@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
+#    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/12/05 19:14:58 by axgimene         ###   ########.fr        #
+#    Updated: 2025/12/10 12:15:59 by gguardam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SOURCES = main.c \
 			utils/export_utils.c \
 			utils/errors.c \
 			utils/struct_utils.c \
+			utils/input_validation.c \
 			utils/cleanup_utils.c \
 			signals/signals.c \
 			parser/parser_tokenizer0.c \

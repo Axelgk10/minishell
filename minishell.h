@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 15:24:21 by axgimene          #+#    #+#             */
-/*   Updated: 2025/12/05 18:31:55 by axgimene         ###   ########.fr       */
+/*   Updated: 2025/12/10 12:13:50 by gguardam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,9 @@ void			process_input(t_shell *shell, char *input);
 void			error_executing\
 (int site_of_error, char **env, char **cmd_params);
 int				write_error_message(int fd, char *cmd, char *arg, char *msg);
+
+//Utils Validation
+int				check_pipe_at_start(t_shell *shell, char *input);
 
 //Utils Envs
 int				export_variables(t_shell *shell);

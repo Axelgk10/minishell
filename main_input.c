@@ -30,10 +30,16 @@ static void	evaluate_struct(t_shell *shell)
 		if (shell->commands->is_builtin)
 			execute_builtin(shell);
 		else
+		{
 			just_execute_it_man(shell);
+			shell->exit_status = g_exit_status;
+		}
 	}
 	else if (shell->commands->next)
-		execute_pipeline(shell, shell->commands);
+		{
+			execute_pipeline(shell, shell->commands);
+			shell->exit_status = g_exit_status;
+		}
 }
 
 static void	cleanup_shell_state(t_shell *shell)
@@ -50,6 +56,19 @@ static void	cleanup_shell_state(t_shell *shell)
 	}
 }
 
+static void	process_tokens(t_shell *shell)
+{
+	if (shell->tokens)
+	{
+		expand_variables(shell, shell->tokens);
+		shell->commands = parse_tokens(shell->tokens);
+		if (shell->commands)
+			evaluate_struct(shell);
+		else
+			shell->exit_status = 2;
+	}
+}
+
 void	process_input(t_shell *shell, char *input)
 {
 	if (check_unclosed_quotes(input))
@@ -60,15 +79,9 @@ void	process_input(t_shell *shell, char *input)
 	add_history(input);
 	cleanup_shell_state(shell);
 	shell->tokens = tokenize(input);
-	if (shell->tokens)
-	{
-		expand_variables(shell, shell->tokens);
-		shell->commands = parse_tokens(shell->tokens);
-		if (shell->commands)
-			evaluate_struct(shell);
-		else
-			shell->exit_status = 2;
-	}
+	if (check_pipe_at_start(shell, input))
+		return ;
+	process_tokens(shell);
 	cleanup_shell_state(shell);
 	free(input);
 }
