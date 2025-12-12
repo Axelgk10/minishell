@@ -145,6 +145,9 @@ void			null_input(t_shell *shell);
 int				check_unclosed_quotes(char *input);
 void			process_input(t_shell *shell, char *input);
 
+//Utils input validation
+int				check_pipe_at_start(t_shell *shell, char *input);
+
 //Utils Errors
 void			error_executing\
 (int site_of_error, char **env, char **cmd_params);

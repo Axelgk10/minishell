@@ -46,6 +46,7 @@ SOURCES = main.c \
 			utils/struct_utils.c \
 			utils/input_validation.c \
 			utils/cleanup_utils.c \
+			utils/input_validation.c \
 			signals/signals.c \
 			parser/parser_tokenizer0.c \
 			parser/parser_tokenizer_utils1.c \
