@@ -76,10 +76,13 @@ static int	handle_pipe_fork(t_shell *shell, t_cmd *current, t_pipe_data *data)
 		perror("fork");
 		if (data->prev_pipe_out > 2)
 			close(data->prev_pipe_out);
-		if (current->next && (close(data->pipe_fd[0]),
-				close(data->pipe_fd[1]), 0))
-			;
-		return (free(data->pids), 1);
+		if (current->next)
+		{
+			close(data->pipe_fd[0]);
+			close(data->pipe_fd[1]);
+		}
+		free(data->pids);
+		return (1);
 	}
 	if (pid == 0)
 		execute_child_process(shell, current, data);

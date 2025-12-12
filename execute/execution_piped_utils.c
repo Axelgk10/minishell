@@ -29,16 +29,26 @@ void	wait_for_childs(t_shell *shell)
 {
 	t_cmd	*current;
 	int		status;
+	int		count;
 
+	count = 0;
 	current = shell->commands;
 	while (current)
 	{
-		wait(&status);
-		if (WIFEXITED(status))
-			g_exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			g_exit_status = 128 + WTERMSIG(status);
+		count++;
 		current = current->next;
+	}
+	while (count > 0)
+	{
+		wait(&status);
+		if (count == 1)
+		{
+			if (WIFEXITED(status))
+				g_exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				g_exit_status = 128 + WTERMSIG(status);
+		}
+		count--;
 	}
 }
 

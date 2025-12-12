@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: axgimene <axgimene@student.42.fr>          +#+  +:+       +#+         #
+#    By: gguardam <gguardam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/06 12:00:00 by gguardam          #+#    #+#              #
-#    Updated: 2025/12/09 18:26:57 by axgimene         ###   ########.fr        #
+#    Updated: 2025/12/10 12:15:59 by gguardam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,23 +27,24 @@ SOURCES = main.c \
 			commands_built/ft_cd.c \
 			commands_built/ft_pwd.c \
 			commands_built/ft_exit.c \
-		commands_built/ft_export.c \
-		commands_built/ft_local_var.c \
-		execute/execution_utils.c \
-		execute/binary_utils.c \
-		execute/execution_single_command.c \
-		execute/execution_piped.c \
-		execute/execution_piped_utils.c \
-		execute/execution_piped_builtins.c \
-		execute/execution_piped_child.c \
-		utils/main_utils.c \
+			commands_built/ft_export.c \
+			commands_built/ft_local_var.c \
+			execute/execution_utils.c \
+			execute/binary_utils.c \
+			execute/execution_single_command.c \
+			execute/execution_piped.c \
+			execute/execution_piped_utils.c \
+			execute/execution_piped_builtins.c \
+			execute/execution_piped_child.c \
 			utils/envs.c \
 			utils/envs_utils.c \
+			utils/local_vars_utils.c \
 			utils/envs_export.c \
 			utils/envs_helpers.c \
 			utils/export_utils.c \
 			utils/errors.c \
 			utils/struct_utils.c \
+			utils/input_validation.c \
 			utils/cleanup_utils.c \
 			utils/input_validation.c \
 			signals/signals.c \

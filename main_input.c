@@ -36,10 +36,10 @@ static void	evaluate_struct(t_shell *shell)
 		}
 	}
 	else if (shell->commands->next)
-	{
-		execute_pipeline(shell, shell->commands);
-		shell->exit_status = g_exit_status;
-	}
+		{
+			execute_pipeline(shell, shell->commands);
+			shell->exit_status = g_exit_status;
+		}
 }
 
 static void	cleanup_shell_state(t_shell *shell)
